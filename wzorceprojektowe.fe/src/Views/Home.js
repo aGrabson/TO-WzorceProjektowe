@@ -20,7 +20,7 @@ export default function Home() {
   const FetchData = async () => {
     setIsLoading(true);
 
-    const data = await GetPatternsByType({ type: "Strukturalny" });
+    const data = await GetPatternsByType({ type: "Structural" });
     if (data !== null) {
       setPatternData(data);
       console.log(data);
@@ -44,7 +44,7 @@ export default function Home() {
           <div className="loadingText">Ładowanie szczegółów meczu</div>
         </>
       ) : patternData === null ? null : (
-        <div>{patternData.map((item) => <div><p>Wzorzec: {item.name}</p><p>Opis: {item.description}</p><p>Schemat: {item.schema}</p></div>)}</div>
+        <div>{patternData.map((item) => <div><p>Pattern name: {item.name}</p><p>Description: {item.description}</p><p>Schema: {item.schema}</p></div>)}</div>
       )}
       <Footer />
     </div>
