@@ -27,5 +27,12 @@ namespace WzorceProjektowe.API.Controllers
         {
             return await _patternService.GetPatternById(guid);
         }
+
+        [HttpPost("GetPatternCodeByType")]
+        public async Task<IActionResult> GetPatternCodeByType([FromBody] GetPatternCodeByTypeRequestDto request)
+        {
+            return await _patternService.GetPatternCodeByType(request);
+        }
+
     }
 }
