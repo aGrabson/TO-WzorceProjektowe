@@ -218,7 +218,7 @@ public class #C# : #AC1#
             int i = 0;
             for(; i<replacements.Length; i++ )
             {
-                response.ListCodes.Add(new CodeFile { Content = splitCodes[i], FileName = replacements[i] });
+                response.ListCodes.Add(new CodeFile { Content = splitCodes[i], FileName = "#" + replacements[i].Split(seperator, StringSplitOptions.RemoveEmptyEntries).ElementAt(0) + "#" });
             }
             response.ListCodes.Add(new CodeFile { Content = splitCodes[i], FileName = "Program" });
 //Wywolanie w swagger
