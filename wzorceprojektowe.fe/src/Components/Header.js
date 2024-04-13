@@ -1,10 +1,18 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import "../Styles/Header.css";
 import { Dropdown } from "react-nested-dropdown";
 import "react-nested-dropdown/dist/styles.css";
 
-export default function Header() {
+export default function Header({FetchCode}) {
   const [selectedItem, setSelectedItem] = useState(null)
+
+  useEffect(() => {
+    if(selectedItem !== null)
+    {
+      FetchCode(selectedItem);
+    }
+  }, [selectedItem]);
+
   const items = [
     {
       label: "Creational Patterns",

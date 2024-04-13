@@ -3,12 +3,12 @@
     left: 0;
     bottom: 0;
     width: 100%;
-    font-size: 1rem;
+    font-size: 24px;
     font-weight: 900;
-    color: #20750f;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+    color: #11998e;
+    padding-top: 6px;
+    padding-bottom: 6px;
     text-align: center;
-    background-color: #46494d;
-    border-top: 3px solid #20750f;
+    background-color: #222831;
+    border-top: 3px solid #11998e;
   }

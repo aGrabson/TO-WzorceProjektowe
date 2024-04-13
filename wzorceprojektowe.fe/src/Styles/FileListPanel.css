@@ -1,0 +1,12 @@
+.fileListPanel {
+    border-bottom: 3px solid transparent;
+    max-height: 60px;
+    min-height: 60px;
+    flex: 1;
+    display: flex;
+    border-image: linear-gradient(to right, #76ABAE, #11998e);
+    border-image-slice: 1;
+}
+.tabLabel {
+    color:aquamarine;
+}

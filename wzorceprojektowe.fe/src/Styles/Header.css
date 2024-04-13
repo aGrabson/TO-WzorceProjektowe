@@ -1,6 +1,7 @@
 .App-header {
-  background-color: #20750f;
-  min-height: 8vh;
+  background-color: #222831;
+  border-bottom: 3px solid #76ABAE;
+  min-height: fit-content;
   display: flex;
   justify-content: space-between;
   align-items: center; 
@@ -10,6 +11,7 @@
 button {
   background-color: #2b2f33;
   color: white;
+  margin: 8px;
   padding: 8px 12px;
   font-size: calc(8px + 1vmin);
   font-weight: bold;
@@ -17,6 +19,7 @@ button {
   cursor: pointer;
   border-radius: 8px;
   margin-left: 4px;
+  border: 1.5px solid #76ABAE;
 }
 
 .PatternName {

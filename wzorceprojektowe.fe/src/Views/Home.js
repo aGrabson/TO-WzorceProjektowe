@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
-import { GetPatternsByType } from "../Controllers/PatternController";
+import PatternConfPanel from "../Components/PatternConfPanel";
+import PatternCodePanel from "../Components/PatternCodePanel";
+import FileListPanel from "../Components/FileListPanel";
+import { GetPatternCodeByName } from "../Controllers/PatternController";
 import { HashLoader } from "react-spinners";
 
 const override = {
@@ -10,43 +13,62 @@ const override = {
 };
 
 export default function Home() {
+  const [fileSelected, setFileSelected] = useState(null);
   const [patternData, setPatternData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [files, setFiles] = useState(null);
+  const [toInterpret, setToInterpret] = useState(null);
 
-  useEffect(() => {
-    FetchData();
-  }, []);
-
-  const FetchData = async () => {
+  const FetchCode = async (selectedItem) => {
     setIsLoading(true);
-
-    const data = await GetPatternsByType({ type: "Structural" });
+    const data = await GetPatternCodeByName({ patternName: selectedItem });
     if (data !== null) {
-      setPatternData(data);
-      console.log(data);
+      console.log(data)
+      setToInterpret(data.toInterpret);
+      setFiles(data.listCodes);
+      setFileSelected(data.listCodes[0]);
+      setPatternData(data.listCodes[0].content);
     }
     setIsLoading(false);
   };
 
+  const handleFileSelect = (fileIndex) => {
+    const selectedFile = files[fileIndex];
+    setFileSelected(selectedFile);
+    setPatternData(selectedFile.content);
+  };
+
   return (
     <div className="App">
-      <Header />
-      {isLoading ? (
-        <>
-          <HashLoader
-            loading={isLoading}
-            cssOverride={override}
-            aria-label="Loading Spinner"
-            data-testid="loader"
-            color="#ffffff"
-            size={50}
-          />
-          <div className="loadingText">Ładowanie szczegółów meczu</div>
-        </>
-      ) : patternData === null ? null : (
-        <div>{patternData.map((item) => <div><p>Pattern name: {item.name}</p><p>Description: {item.description}</p><p>Schema: {item.schema}</p></div>)}</div>
-      )}
-      <Footer />
+      <>
+        <Header FetchCode={FetchCode} />
+        <div style={{ display: "flex", flexDirection: "row", flex: 1 }}>
+          {isLoading ? (
+            <>
+              <HashLoader
+                loading={isLoading}
+                cssOverride={override}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+                color="#ffffff"
+                size={50}
+              />
+              <div className="loadingText">Ładowanie</div>
+            </>
+          ) : (
+            <>
+              <PatternConfPanel fileSelected={fileSelected} files={files} setFiles={setFiles} toInterpret={toInterpret} setToInterpret={setToInterpret}/>
+              <div
+                style={{ display: "flex", flexDirection: "column", flex: 1 }}
+              >
+                <FileListPanel files={files} onFileSelect={handleFileSelect} toInterpret={toInterpret}/>
+                <PatternCodePanel patternData={patternData} toInterpret={toInterpret}/>
+              </div>
+            </>
+          )}
+        </div>
+        <Footer />
+      </>
     </div>
   );
 }
