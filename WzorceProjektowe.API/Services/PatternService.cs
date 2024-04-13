@@ -12,6 +12,94 @@ namespace WzorceProjektowe.API.Services
     {
         private readonly DataContext _context;
         private const string seperator = "#";
+        private string templateCoreCode = @"
+using System;
+
+public interface #I1#
+{
+    void Operation();
+}
+
+public class #C1# : #I1#
+{
+    public void Operation()
+    {
+        Console.WriteLine(""ConcreteComponent operation"");
+    }
+}
+
+public abstract class #AC1# : #I1#
+{
+    protected #I1# component;
+
+    public #AC1#(#I1# component)
+    {
+        this.component = component;
+    }
+
+    public virtual void Operation()
+    {
+        component.Operation();
+    }
+}
+
+public class #C2# : #AC1#
+{
+    public #C2#(#I1# component) : base(component)
+    {
+    }
+
+    public override void Operation()
+    {
+        base.Operation();
+        AddedBehavior();
+    }
+
+    private void AddedBehavior()
+    {
+        Console.WriteLine(""Added behavior by ConcreteDecorator"");
+    }
+}
+
+#DYNAMICS#
+
+public class Program
+{
+    static void Main(string[] args)
+    {
+        // Tworzymy konkretne komponenty i dekorujemy je
+        #I1# component = new #C1#();
+        #I1# decoratedComponent = new #C2#(component);
+
+        // Wywołujemy operację na dekoratorze, która przejdzie przez wszystkie dekoratory
+        decoratedComponent.Operation();
+
+        /*
+            Wynik działania programu:
+            ConcreteComponent operation
+            Added behavior by ConcreteDecorator
+        */
+    }
+}";
+        private string templateDynamicCode = $@"
+public class #C# : #AC1#
+{{
+    public #C#(#I1# component) : base(component)
+    {{
+    }}
+
+    public override void Operation()
+    {{
+        base.Operation();
+        AddedBehavior();
+    }}
+
+    private void AddedBehavior()
+    {{
+        Console.WriteLine(""Added behavior by ConcreteDecorator"");
+    }}
+}}
+";
 
         public PatternService(DataContext context)
         {
@@ -95,98 +183,7 @@ namespace WzorceProjektowe.API.Services
         public async Task<IActionResult> GetPatternCodeByType(GetPatternCodeByTypeRequestDto request)
         {
             //pobranie patternu dla dodatkowych klas oraz podstawowego szablonu
-            string templateCoreCode = @"
-using System;
-
-// Interfejs, który będzie implementowany przez konkretne dekorowane obiekty oraz dekoratory
-public interface #I1#
-{
-    void Operation();
-}
-
-// Konkretna klasa implementująca interfejs
-public class #C1# : #I1#
-{
-    public void Operation()
-    {
-        Console.WriteLine(""ConcreteComponent operation"");
-    }
-}
-
-// Bazowa klasa dekoratora, która implementuje interfejs IComponent
-public abstract class #AC1# : #I1#
-{
-    protected #I1# component;
-
-    public #AC1#(#I1# component)
-    {
-        this.component = component;
-    }
-
-    public virtual void Operation()
-    {
-        component.Operation();
-    }
-}
-
-// Konkretny dekorator dodający nową funkcjonalność do komponentu
-public class #C2# : #AC1#
-{
-    public #C2#(#I1# component) : base(component)
-    {
-    }
-
-    public override void Operation()
-    {
-        base.Operation();
-        AddedBehavior();
-    }
-
-    private void AddedBehavior()
-    {
-        Console.WriteLine(""Added behavior by ConcreteDecorator"");
-    }
-}
-
-#DYNAMICS#
-class Program
-{
-    static void Main(string[] args)
-    {
-        // Tworzymy konkretne komponenty i dekorujemy je
-        #I1# component = new #C1#();
-        #I1# decoratedComponent = new #C2#(component);
-
-        // Wywołujemy operację na dekoratorze, która przejdzie przez wszystkie dekoratory
-        decoratedComponent.Operation();
-
-        /*
-            Wynik działania programu:
-            ConcreteComponent operation
-            Added behavior by ConcreteDecorator
-        */
-    }
-}";
-            string templateDynamicCode = $@"
-// Konkretny dekorator dodający nową funkcjonalność do komponentu
-public class #C# : #AC1#
-{{
-    public #C#(#I1# component) : base(component)
-    {{
-    }}
-
-    public override void Operation()
-    {{
-        base.Operation();
-        AddedBehavior();
-    }}
-
-    private void AddedBehavior()
-    {{
-        Console.WriteLine(""Added behavior by ConcreteDecorator"");
-    }}
-}}
-";
+            
             string[] replacements = request.ToInterpret.Split(" ", StringSplitOptions.RemoveEmptyEntries);
             //string[] replacements = { "#I1#FajnyInterfejs#", "#C1#Klasa#", "#AC1#AbstrakcyjnaKlasa#", "#C2#KlasaDekoratora#", "#C#NowyDekorator1#", "#C#NowyDekorator2#" };
             string filledCode = FillTemplate(templateCoreCode, templateDynamicCode, replacements);
@@ -197,5 +194,40 @@ public class #C# : #AC1#
 //}
             return new OkObjectResult(filledCode);
         }
+        public async Task<IActionResult> GetPatternCodeByName(GetPatternCodeByNameRequestDto request)
+        {
+            //pobranie patternu dla dodatkowych klas oraz podstawowego szablonu
+            var patternEntity = await _context.Patterns.FirstOrDefaultAsync(x => x.Name == request.PatternName);
+            if (patternEntity == null)
+            {
+                return new NotFoundResult();
+            }
+
+            string[] replacements = patternEntity.ToInterpret.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+            //string[] replacements = { "#I1#FajnyInterfejs#", "#C1#Klasa#", "#AC1#AbstrakcyjnaKlasa#", "#C2#KlasaDekoratora#", "#C#NowyDekorator1#", "#C#NowyDekorator2#" };
+            //string filledCode = FillTemplate(patternEntity.Schema, patternEntity.DynamicsCode, replacements);
+            string filledCode = patternEntity.Schema.Replace(seperator + "DYNAMICS" + seperator, " ");
+            string[] splitCodes = filledCode.Split("#splitfile#", StringSplitOptions.RemoveEmptyEntries);
+            if(splitCodes.Length != replacements.Length+1) 
+            {
+                return new NotFoundResult();
+            }
+            GetPatternCodeByNameResponseDto response = new GetPatternCodeByNameResponseDto();
+            response.PatternName = patternEntity.Name;
+            response.ToInterpret = patternEntity.ToInterpret;
+            int i = 0;
+            for(; i<replacements.Length; i++ )
+            {
+                response.ListCodes.Add(new CodeFile { Content = splitCodes[i], FileName = replacements[i] });
+            }
+            response.ListCodes.Add(new CodeFile { Content = splitCodes[i], FileName = "Program" });
+//Wywolanie w swagger
+//            {
+//                "patternID": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+//  "toInterpret": "#I1#FajnyInterfejs# #C1#Klasa# #AC1#AbstrakcyjnaKlasa# #C2#KlasaDekoratora# #C#NowyDekorator1# #C#NowyDekorator2#"
+//}
+            return new OkObjectResult(response);
+        }
+
     }
 }

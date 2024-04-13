@@ -8,5 +8,6 @@ namespace WzorceProjektowe.API.Interfaces
         public Task<IActionResult> GetPatternById(Guid guid);
         public Task<IActionResult> GetPatternsByType(string type);
         public Task<IActionResult> GetPatternCodeByType(GetPatternCodeByTypeRequestDto request);
+        public Task<IActionResult> GetPatternCodeByName(GetPatternCodeByNameRequestDto request);
     }
 }

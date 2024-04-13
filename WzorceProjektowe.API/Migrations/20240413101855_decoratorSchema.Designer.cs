@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WzorceProjektowe.API.Data;
 
@@ -11,9 +12,10 @@ using WzorceProjektowe.API.Data;
 namespace WzorceProjektowe.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240413101855_decoratorSchema")]
+    partial class decoratorSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,7 +61,7 @@ namespace WzorceProjektowe.API.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("ffb8c2cb-3b24-4bbe-b4bd-35061073ee98"),
+                            Id = new Guid("3ea2f507-4346-4a6b-ba5d-809d0e9d2f86"),
                             Description = "The Adapter pattern allows objects with incompatible interfaces to collaborate.",
                             DynamicsCode = "",
                             Name = "Adapter",
@@ -69,7 +71,7 @@ namespace WzorceProjektowe.API.Migrations
                         },
                         new
                         {
-                            Id = new Guid("d5842261-670b-4896-8697-4e4c263cd86f"),
+                            Id = new Guid("c5757fbc-d3a6-4166-81c3-8ce9b60919aa"),
                             Description = "The Bridge pattern decouples an abstraction from its implementation so that the two can vary independently.",
                             DynamicsCode = "",
                             Name = "Bridge",
@@ -79,7 +81,7 @@ namespace WzorceProjektowe.API.Migrations
                         },
                         new
                         {
-                            Id = new Guid("6706a7fc-0d05-4484-a9eb-54d4a47723a1"),
+                            Id = new Guid("4a1b1a87-179a-4df8-ab00-391838643741"),
                             Description = "The Composite pattern composes objects into tree structures to represent part-whole hierarchies.",
                             DynamicsCode = "",
                             Name = "Composite",
@@ -89,17 +91,17 @@ namespace WzorceProjektowe.API.Migrations
                         },
                         new
                         {
-                            Id = new Guid("bfdf0acd-cb53-4f6d-8502-5369af29c23f"),
+                            Id = new Guid("abbcb11b-26f0-44d4-ba0d-e128babe1122"),
                             Description = "The Decorator pattern attaches additional responsibilities to objects dynamically.",
                             DynamicsCode = "\r\n#splitfile#\r\nusing System;\r\npublic class #C# : #AC1#\r\n{{\r\n    public #C#(#I1# component) : base(component)\r\n    {{\r\n    }}\r\n\r\n    public override void Operation()\r\n    {{\r\n        base.Operation();\r\n        AddedBehavior();\r\n    }}\r\n\r\n    private void AddedBehavior()\r\n    {{\r\n        Console.WriteLine(\"Added behavior by ConcreteDecorator\");\r\n    }}\r\n}}\r\n",
                             Name = "Decorator",
-                            Schema = "#splitfile#\r\npublic interface #I1#\r\n{\r\n    void Operation();\r\n}\r\n#splitfile#\r\npublic class #C1# : #I1#\r\n{\r\n    public void Operation()\r\n    {\r\n        Console.WriteLine(\"ConcreteComponent operation\");\r\n    }\r\n}\r\n#splitfile#\r\npublic abstract class #AC1# : #I1#\r\n{\r\n    protected #I1# component;\r\n\r\n    public #AC1#(#I1# component)\r\n    {\r\n        this.component = component;\r\n    }\r\n\r\n    public virtual void Operation()\r\n    {\r\n        component.Operation();\r\n    }\r\n}\r\n#splitfile#\r\nusing System;\r\npublic class #C2# : #AC1#\r\n{\r\n    public #C2#(#I1# component) : base(component)\r\n    {\r\n    }\r\n\r\n    public override void Operation()\r\n    {\r\n        base.Operation();\r\n        AddedBehavior();\r\n    }\r\n\r\n    private void AddedBehavior()\r\n    {\r\n        Console.WriteLine(\"Added behavior by ConcreteDecorator\");\r\n    }\r\n}\r\n\r\n#DYNAMICS#\r\n#splitfile#\r\npublic class Program\r\n{\r\n    static void Main(string[] args)\r\n    {\r\n        // Tworzymy konkretne komponenty i dekorujemy je\r\n        #I1# component = new #C1#();\r\n        #I1# decoratedComponent = new #C2#(component);\r\n\r\n        // Wywołujemy operację na dekoratorze, która przejdzie przez wszystkie dekoratory\r\n        decoratedComponent.Operation();\r\n\r\n        /*\r\n            Wynik działania programu:\r\n            ConcreteComponent operation\r\n            Added behavior by ConcreteDecorator\r\n        */\r\n    }\r\n}",
+                            Schema = "\r\n#splitfile#\r\npublic interface #I1#\r\n{\r\n    void Operation();\r\n}\r\n#splitfile#\r\npublic class #C1# : #I1#\r\n{\r\n    public void Operation()\r\n    {\r\n        Console.WriteLine(\"ConcreteComponent operation\");\r\n    }\r\n}\r\n#splitfile#\r\npublic abstract class #AC1# : #I1#\r\n{\r\n    protected #I1# component;\r\n\r\n    public #AC1#(#I1# component)\r\n    {\r\n        this.component = component;\r\n    }\r\n\r\n    public virtual void Operation()\r\n    {\r\n        component.Operation();\r\n    }\r\n}\r\n#splitfile#\r\nusing System;\r\npublic class #C2# : #AC1#\r\n{\r\n    public #C2#(#I1# component) : base(component)\r\n    {\r\n    }\r\n\r\n    public override void Operation()\r\n    {\r\n        base.Operation();\r\n        AddedBehavior();\r\n    }\r\n\r\n    private void AddedBehavior()\r\n    {\r\n        Console.WriteLine(\"Added behavior by ConcreteDecorator\");\r\n    }\r\n}\r\n\r\n#DYNAMICS#\r\n#splitfile#\r\npublic class Program\r\n{\r\n    static void Main(string[] args)\r\n    {\r\n        // Tworzymy konkretne komponenty i dekorujemy je\r\n        #I1# component = new #C1#();\r\n        #I1# decoratedComponent = new #C2#(component);\r\n\r\n        // Wywołujemy operację na dekoratorze, która przejdzie przez wszystkie dekoratory\r\n        decoratedComponent.Operation();\r\n\r\n        /*\r\n            Wynik działania programu:\r\n            ConcreteComponent operation\r\n            Added behavior by ConcreteDecorator\r\n        */\r\n    }\r\n}",
                             ToInterpret = "#I1#FajnyInterfejs# #C1#Klasa# #AC1#AbstrakcyjnaKlasa# #C2#KlasaDekoratora#",
                             Type = "Structural"
                         },
                         new
                         {
-                            Id = new Guid("6c2afb6f-bcc5-4d02-92ef-b7df12fd0fac"),
+                            Id = new Guid("cc5c6588-e749-409f-90a6-a9fbf70b2b33"),
                             Description = "The Facade pattern provides a unified interface to a set of interfaces in a subsystem.",
                             DynamicsCode = "",
                             Name = "Facade",
@@ -109,7 +111,7 @@ namespace WzorceProjektowe.API.Migrations
                         },
                         new
                         {
-                            Id = new Guid("752a9281-8840-4d7b-8fd6-5da1b3eee655"),
+                            Id = new Guid("3de45ddc-439b-4800-9e88-81c066f35689"),
                             Description = "The Flyweight pattern minimizes memory usage and improves performance by sharing as much as possible with similar objects.",
                             DynamicsCode = "",
                             Name = "Flyweight",
@@ -119,7 +121,7 @@ namespace WzorceProjektowe.API.Migrations
                         },
                         new
                         {
-                            Id = new Guid("493b34a1-12e1-4967-aa6c-a54cd9d147f9"),
+                            Id = new Guid("a003e668-a09e-4676-ad73-36067f4e54b9"),
                             Description = "The Proxy pattern provides a surrogate or placeholder for another object to control access to it.",
                             DynamicsCode = "",
                             Name = "Proxy",
@@ -129,7 +131,7 @@ namespace WzorceProjektowe.API.Migrations
                         },
                         new
                         {
-                            Id = new Guid("249dbdc9-acc3-449d-8968-634c089e7ba1"),
+                            Id = new Guid("4fdf8a4a-6f2b-4437-ac1b-1db74ccd580c"),
                             Description = "The Factory Method pattern defines an interface for creating objects, but allows subclasses to alter the type of objects that will be created.",
                             DynamicsCode = "",
                             Name = "Factory Method",
@@ -139,7 +141,7 @@ namespace WzorceProjektowe.API.Migrations
                         },
                         new
                         {
-                            Id = new Guid("21ada38f-cd9b-4231-b564-d6c5f3412260"),
+                            Id = new Guid("6af41915-ad93-4a6c-b53c-42320b1c764b"),
                             Description = "The Abstract Factory pattern provides an interface for creating families of related or dependent objects without specifying their concrete classes.",
                             DynamicsCode = "",
                             Name = "Abstract Factory",
@@ -149,7 +151,7 @@ namespace WzorceProjektowe.API.Migrations
                         },
                         new
                         {
-                            Id = new Guid("f83fc61f-16b4-4160-9116-12d7c8c0c734"),
+                            Id = new Guid("adf9639a-d34a-4561-9313-5b99727b26b6"),
                             Description = "The Builder pattern separates the construction of a complex object from its representation, allowing the same construction process to create different representations.",
                             DynamicsCode = "",
                             Name = "Builder",
@@ -159,7 +161,7 @@ namespace WzorceProjektowe.API.Migrations
                         },
                         new
                         {
-                            Id = new Guid("da697d34-84c0-476a-a083-6e8b00209367"),
+                            Id = new Guid("c971da25-e0cc-429c-a843-06b95b017cd4"),
                             Description = "The Prototype pattern creates new objects by copying an existing object, known as the prototype.",
                             DynamicsCode = "",
                             Name = "Prototype",
@@ -169,7 +171,7 @@ namespace WzorceProjektowe.API.Migrations
                         },
                         new
                         {
-                            Id = new Guid("6469a535-507a-44fd-b9d7-dcf831847a21"),
+                            Id = new Guid("07c2104b-c8c4-4964-a6f3-da1e0f3dfce8"),
                             Description = "The Singleton pattern ensures that a class has only one instance and provides a global point of access to that instance.",
                             DynamicsCode = "",
                             Name = "Singleton",

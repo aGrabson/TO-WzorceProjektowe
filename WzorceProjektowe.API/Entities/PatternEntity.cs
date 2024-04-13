@@ -7,5 +7,7 @@ namespace WzorceProjektowe.API.Entities
         public string Description { get; set; }
         public string Type { get; set; }
         public string Schema { get; set; }
+        public string ToInterpret { get; set; }
+        public string DynamicsCode { get; set; }
     }
 }

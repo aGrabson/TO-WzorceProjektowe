@@ -33,6 +33,11 @@ namespace WzorceProjektowe.API.Controllers
         {
             return await _patternService.GetPatternCodeByType(request);
         }
+        [HttpPost("GetPatternCodeByName")]
+        public async Task<IActionResult> GetPatternCodeByName([FromBody] GetPatternCodeByNameRequestDto request)
+        {
+            return await _patternService.GetPatternCodeByName(request);
+        }
 
     }
 }
