@@ -145,6 +145,7 @@ public class #C# : #AC1#
         {
             string[] tmpReplacements = replacements;
             List<Tuple<string,string>> dynamicClasses = new();
+            List<Tuple<string,string>> dynamicMethods = new();
             List<Tuple<string, Tuple<string,string>>> dynamicFields = new();
             int counter = 0;
 
@@ -183,6 +184,21 @@ public class #C# : #AC1#
                             tmpReplacements[i] = null;
                         }
                     }
+                }else if (trimmedLine.StartsWith(separator + "M") && trimmedLine.EndsWith(separator))
+                {
+                    //#M;I1#nazwa#
+                    string[] parts = trimmedLine.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+                    if (parts.Length == 2)
+                    {
+                        string[] parts2 = parts[0].Split(";", StringSplitOptions.RemoveEmptyEntries);
+                        if (parts2.Length == 2)
+                        {
+                            string dest = parts2[1].Trim();
+                            string name = parts[1].Trim();
+                            dynamicMethods.Add(Tuple.Create(dest,name));
+                            tmpReplacements[i] = null;
+                        }
+                    }
                 }
             }
 
@@ -192,9 +208,10 @@ public class #C# : #AC1#
 
             template = template.Replace(separator + "DYNAMICS" + separator, decorators);
 
-            var test = dynamicFields.GroupBy(x => x.Item1);
+            var groupByKeyDynamicFields = dynamicFields.GroupBy(x => x.Item1);
+            var groupByKeyDynamicMethods = dynamicMethods.GroupBy(x => x.Item1);
 
-            foreach (var tmp in test)
+            foreach (var tmp in groupByKeyDynamicFields)
             {
                 string fieldReplacement = string.Empty;
                 string key = tmp.Key;
@@ -203,6 +220,35 @@ public class #C# : #AC1#
                     fieldReplacement += $"public {x.Item2.Item1} {x.Item2.Item2};\n    ";
                 }
                 template = template.Replace(separator + "F;" + separator + key + separator, fieldReplacement);
+            }
+            
+            foreach (var tmp in groupByKeyDynamicMethods)
+            {
+                string methodReplacement = string.Empty;
+                string key = tmp.Key;
+                foreach (var x in tmp)
+                {
+                    if (Regex.IsMatch(key, "I.*"))
+                    {
+                        methodReplacement += $"void {x.Item2}();\n    ";
+                    }
+                    else if (Regex.IsMatch(key, "AC.*"))
+                    {
+                        methodReplacement += @$"
+    public virtual void {x.Item2}(){{
+        component.{x.Item2}();
+    }}";
+                    }
+                    else if (Regex.IsMatch(key, "C.*"))
+                    {
+                        methodReplacement += @$"
+    public void {x.Item2}(){{
+        throw new NotImplementedException();
+    }}";
+                    }
+                    
+                }
+                template = template.Replace(separator + "M;" + separator + key + separator, methodReplacement);
             }
 
             foreach (string replace in tmpReplacements)
@@ -241,7 +287,7 @@ public class #C# : #AC1#
             //Wywolanie w swagger
             //            {
             //                "patternID": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-            //  "toInterpret": "#I1#FajnyInterfejs# #CC1#Klasa# #AC1#AbstrakcyjnaKlasa# #C2#KlasaDekoratora# #C5#NowyDekorator1# #C7#NowyDekorator2#  #F;C1;int#nazwa9#  #F;C2;int#nazwa3# #C3#Klasaasdas#"
+            //  "toInterpret": "#I1#FajnyInterfejs# #CC1#Klasa# #AC1#AbstrakcyjnaKlasa# #C2#KlasaDekoratora# #C5#NowyDekorator1# #C7#NowyDekorator2#  #F;CC1;int#nazwa9#  #F;C2;int#nazwa3# #C3#Klasaasdas# #M;I1#metka#"
             //}
             return new OkObjectResult(filledCode);
         }
