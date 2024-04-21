@@ -53,11 +53,15 @@ namespace WzorceProjektowe.API.Data
                 Schema = @"#splitfile#
 public interface #I1#
 {
+    #F;#I1#
+    #M;#I1#
     void Operation();
 }
 #splitfile#
-public class #C1# : #I1#
+public class #CC1# : #I1#
 {
+    #F;#CC1#
+    #M;#CC1#
     public void Operation()
     {
         Console.WriteLine(""ConcreteComponent operation"");
@@ -67,6 +71,9 @@ public class #C1# : #I1#
 public abstract class #AC1# : #I1#
 {
     protected #I1# component;
+    
+    #F;#AC1#
+    #M;#AC1#
 
     public #AC1#(#I1# component)
     {
@@ -78,25 +85,6 @@ public abstract class #AC1# : #I1#
         component.Operation();
     }
 }
-#splitfile#
-using System;
-public class #C2# : #AC1#
-{
-    public #C2#(#I1# component) : base(component)
-    {
-    }
-
-    public override void Operation()
-    {
-        base.Operation();
-        AddedBehavior();
-    }
-
-    private void AddedBehavior()
-    {
-        Console.WriteLine(""Added behavior by ConcreteDecorator"");
-    }
-}
 
 #DYNAMICS#
 #splitfile#
@@ -105,7 +93,7 @@ public class Program
     static void Main(string[] args)
     {
         // Tworzymy konkretne komponenty i dekorujemy je
-        #I1# component = new #C1#();
+        #I1# component = new #CC1#();
         #I1# decoratedComponent = new #C2#(component);
 
         // Wywołujemy operację na dekoratorze, która przejdzie przez wszystkie dekoratory
@@ -122,24 +110,26 @@ public class Program
 #splitfile#
 using System;
 public class #C# : #AC1#
-{{
+{
+    #F;#C#
+    #M;#C#
     public #C#(#I1# component) : base(component)
-    {{
-    }}
+    {
+    }
 
     public override void Operation()
-    {{
+    {
         base.Operation();
         AddedBehavior();
-    }}
+    }
 
     private void AddedBehavior()
-    {{
+    {
         Console.WriteLine(""Added behavior by ConcreteDecorator"");
-    }}
-}}
+    }
+}
 ",
-                ToInterpret = "#I1#FajnyInterfejs# #C1#Klasa# #AC1#AbstrakcyjnaKlasa# #C2#KlasaDekoratora#",
+                ToInterpret = "#I1#FajnyInterfejs# #CC1#Klasa# #AC1#AbstrakcyjnaKlasa# #C2#KlasaDekoratora#",
             },
             new PatternEntity
             {
