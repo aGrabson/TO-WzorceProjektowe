@@ -145,8 +145,8 @@ public class #C# : #AC1#
         {
             string[] tmpReplacements = replacements;
             List<Tuple<string,string>> dynamicClasses = new();
-            List<Tuple<string,string>> dynamicMethods = new();
-            List<Tuple<string, Tuple<string,string>>> dynamicFields = new();
+            List<DynamicFields> dynamicFields = new();
+            List<DynamicMethod> dynamicMethods = new();
             int counter = 0;
 
             for (int i = 0; i <= tmpReplacements.Length - 1; i++)
@@ -180,22 +180,32 @@ public class #C# : #AC1#
                             string dest = parts2[1].Trim();
                             string type = parts2[2].Trim();
                             string name = parts[1].Trim();
-                            dynamicFields.Add(new Tuple<string, Tuple<string, string>>(dest, Tuple.Create(type, name)));
+                            dynamicFields.Add(new DynamicFields(name, type, dest));
                             tmpReplacements[i] = null;
                         }
                     }
-                }else if (trimmedLine.StartsWith(separator + "M") && trimmedLine.EndsWith(separator))
+                }
+                else if (trimmedLine.StartsWith(separator + "M") && trimmedLine.EndsWith(separator))
                 {
-                    //#M;I1#nazwa#
+                    //bylo #M;I1#nazwa#
+                    //#M;I1;void;int i,double x#nazwa#
                     string[] parts = trimmedLine.Split(separator, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 2)
                     {
                         string[] parts2 = parts[0].Split(";", StringSplitOptions.RemoveEmptyEntries);
-                        if (parts2.Length == 2)
+                        if (parts2.Length == 4)
                         {
                             string dest = parts2[1].Trim();
+                            string methodType = parts2[2].Trim();
                             string name = parts[1].Trim();
-                            dynamicMethods.Add(Tuple.Create(dest,name));
+                            string[] parts3 = parts2[3].Split(",", StringSplitOptions.RemoveEmptyEntries);
+                            List<Tuple<string, string>> methodParams = new List<Tuple<string, string>>();
+                            foreach(var methodParam in parts3)
+                            {
+                                string[] separateParam = methodParam.Split(".", StringSplitOptions.RemoveEmptyEntries);
+                                methodParams.Add(Tuple.Create(separateParam[0].Trim(), separateParam[1].Trim()));
+                            }
+                            dynamicMethods.Add(new DynamicMethod(name, methodType, dest, methodParams));
                             tmpReplacements[i] = null;
                         }
                     }
@@ -208,8 +218,8 @@ public class #C# : #AC1#
 
             template = template.Replace(separator + "DYNAMICS" + separator, decorators);
 
-            var groupByKeyDynamicFields = dynamicFields.GroupBy(x => x.Item1);
-            var groupByKeyDynamicMethods = dynamicMethods.GroupBy(x => x.Item1);
+            var groupByKeyDynamicFields = dynamicFields.GroupBy(x => x.Destination);
+            var groupByKeyDynamicMethods = dynamicMethods.GroupBy(x => x.Destination);
 
             foreach (var tmp in groupByKeyDynamicFields)
             {
@@ -217,7 +227,7 @@ public class #C# : #AC1#
                 string key = tmp.Key;
                 foreach (var x in tmp)
                 {
-                    fieldReplacement += $"public {x.Item2.Item1} {x.Item2.Item2};\n    ";
+                    fieldReplacement += $"public {x.Type} {x.Name};\n    ";
                 }
                 template = template.Replace(separator + "F;" + separator + key + separator, fieldReplacement);
             }
@@ -228,21 +238,33 @@ public class #C# : #AC1#
                 string key = tmp.Key;
                 foreach (var x in tmp)
                 {
+                    string @param = string.Empty;
+                    string noTypeParam = string.Empty;
+                    for(int i=0;i<x.Params.Count();i++)
+                    {
+                        if(i!=0)
+                        {
+                            @param += ", ";
+                            noTypeParam += ", ";
+                        }
+                        @param += x.Params.ElementAt(i).Item1 +" "+ x.Params.ElementAt(i).Item2;
+                        noTypeParam += x.Params.ElementAt(i).Item2;
+                    }
                     if (Regex.IsMatch(key, "I.*"))
                     {
-                        methodReplacement += $"void {x.Item2}();\n    ";
+                        methodReplacement += $"{x.Type} {x.Name}({@param});\n    ";
                     }
                     else if (Regex.IsMatch(key, "AC.*"))
                     {
                         methodReplacement += @$"
-    public virtual void {x.Item2}(){{
-        component.{x.Item2}();
+    public virtual {x.Type} {x.Name}({@param}){{
+        component.{x.Name}({noTypeParam});
     }}";
                     }
                     else if (Regex.IsMatch(key, "C.*"))
                     {
                         methodReplacement += @$"
-    public void {x.Item2}(){{
+    public {x.Type} {x.Name}({@param}){{
         throw new NotImplementedException();
     }}";
                     }
@@ -287,7 +309,7 @@ public class #C# : #AC1#
             //Wywolanie w swagger
             //            {
             //                "patternID": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-            //  "toInterpret": "#I1#FajnyInterfejs# #CC1#Klasa# #AC1#AbstrakcyjnaKlasa# #C2#KlasaDekoratora# #C5#NowyDekorator1# #C7#NowyDekorator2#  #F;CC1;int#nazwa9#  #F;C2;int#nazwa3# #C3#Klasaasdas# #M;I1#metka#"
+            //  "toInterpret": "#I1#FajnyInterfejs# #CC1#Klasa# #AC1#AbstrakcyjnaKlasa# #C2#KlasaDekoratora# #C5#NowyDekorator1# #C7#NowyDekorator2#  #F;CC1;int#nazwa9#  #F;C2;int#nazwa3# #C3#Klasaasdas# #M;I1;int;string.s,int.i,double.x#metka#"
             //}
             return new OkObjectResult(filledCode);
         }
