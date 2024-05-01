@@ -129,7 +129,7 @@ public class #C# : #AC1#
     }
 }
 ",
-                ToInterpret = "#I1#FajnyInterfejs# #CC1#Klasa# #AC1#AbstrakcyjnaKlasa# #C2#KlasaDekoratora#",
+                ToInterpret = "#I1#FajnyInterfejs# #CC1#Klasa# #AC1#AbstrakcyjnaKlasa# #C2#KlasaDekoratora# ",
             },
             new PatternEntity
             {

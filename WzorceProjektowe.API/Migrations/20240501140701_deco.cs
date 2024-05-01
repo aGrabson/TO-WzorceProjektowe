@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace WzorceProjektowe.API.Migrations
 {
-    public partial class fieldInSchema : Migration
+    public partial class deco : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -74,18 +74,18 @@ namespace WzorceProjektowe.API.Migrations
                 columns: new[] { "Id", "Description", "DynamicsCode", "Name", "Schema", "ToInterpret", "Type" },
                 values: new object[,]
                 {
-                    { new Guid("039cf74b-3ed6-470b-97a4-c5d0b5ff51f9"), "The Flyweight pattern minimizes memory usage and improves performance by sharing as much as possible with similar objects.", "", "Flyweight", "", "", "Structural" },
-                    { new Guid("0c583dc0-a077-465b-a728-dcb395306340"), "The Proxy pattern provides a surrogate or placeholder for another object to control access to it.", "", "Proxy", "", "", "Structural" },
-                    { new Guid("27eb0b5b-ed8e-4756-878d-630ba53ec970"), "The Adapter pattern allows objects with incompatible interfaces to collaborate.", "", "Adapter", "interface ITarget {\r\n    void Request();\r\n}\r\n\r\nclass Adaptee {\r\n    public void SpecificRequest() {\r\n        Console.WriteLine(\"Specific request\");\r\n    }\r\n}\r\n\r\nclass Adapter : ITarget {\r\n    private Adaptee _adaptee;\r\n\r\n    public Adapter(Adaptee adaptee) {\r\n        _adaptee = adaptee;\r\n    }\r\n\r\n    public void Request() {\r\n        _adaptee.SpecificRequest();\r\n    }\r\n}\r\n\r\nclass Client {\r\n    static void Main(string[] args) {\r\n        Adaptee adaptee = new Adaptee();\r\n        ITarget adapter = new Adapter(adaptee);\r\n        adapter.Request();\r\n    }\r\n}", "", "Structural" },
-                    { new Guid("2cb4e620-aabc-4675-bd36-56c9e2f32b46"), "The Bridge pattern decouples an abstraction from its implementation so that the two can vary independently.", "", "Bridge", "", "", "Structural" },
-                    { new Guid("5808f582-29ec-49a3-b87c-461323f8cef5"), "The Prototype pattern creates new objects by copying an existing object, known as the prototype.", "", "Prototype", "", "", "Creational" },
-                    { new Guid("622b0bc2-1bb7-466e-9eee-a2931bc4ebda"), "The Facade pattern provides a unified interface to a set of interfaces in a subsystem.", "", "Facade", "", "", "Structural" },
-                    { new Guid("73fbda00-c67e-4660-8641-eabd35ba44db"), "The Composite pattern composes objects into tree structures to represent part-whole hierarchies.", "", "Composite", "", "", "Structural" },
-                    { new Guid("78a6d753-bb49-4769-8fce-448de83578cc"), "The Singleton pattern ensures that a class has only one instance and provides a global point of access to that instance.", "", "Singleton", "", "", "Creational" },
-                    { new Guid("a8605a70-b59f-4658-ab70-d275a39c5c79"), "The Builder pattern separates the construction of a complex object from its representation, allowing the same construction process to create different representations.", "", "Builder", "", "", "Creational" },
-                    { new Guid("cfefc139-0065-4d98-b73d-9e4cd5d3c2d4"), "The Decorator pattern attaches additional responsibilities to objects dynamically.", "\r\n#splitfile#\r\nusing System;\r\npublic class #C# : #AC1#\r\n{\r\n    #F;#C#\r\n    #M;#C#\r\n    public #C#(#I1# component) : base(component)\r\n    {\r\n    }\r\n\r\n    public override void Operation()\r\n    {\r\n        base.Operation();\r\n        AddedBehavior();\r\n    }\r\n\r\n    private void AddedBehavior()\r\n    {\r\n        Console.WriteLine(\"Added behavior by ConcreteDecorator\");\r\n    }\r\n}\r\n", "Decorator", "#splitfile#\r\npublic interface #I1#\r\n{\r\n    #F;#I1#\r\n    #M;#I1#\r\n    void Operation();\r\n}\r\n#splitfile#\r\npublic class #CC1# : #I1#\r\n{\r\n    #F;#CC1#\r\n    #M;#CC1#\r\n    public void Operation()\r\n    {\r\n        Console.WriteLine(\"ConcreteComponent operation\");\r\n    }\r\n}\r\n#splitfile#\r\npublic abstract class #AC1# : #I1#\r\n{\r\n    protected #I1# component;\r\n    \r\n    #F;#AC1#\r\n    #M;#AC1#\r\n\r\n    public #AC1#(#I1# component)\r\n    {\r\n        this.component = component;\r\n    }\r\n\r\n    public virtual void Operation()\r\n    {\r\n        component.Operation();\r\n    }\r\n}\r\n\r\n#DYNAMICS#\r\n#splitfile#\r\npublic class Program\r\n{\r\n    static void Main(string[] args)\r\n    {\r\n        // Tworzymy konkretne komponenty i dekorujemy je\r\n        #I1# component = new #CC1#();\r\n        #I1# decoratedComponent = new #C2#(component);\r\n\r\n        // Wywołujemy operację na dekoratorze, która przejdzie przez wszystkie dekoratory\r\n        decoratedComponent.Operation();\r\n\r\n        /*\r\n            Wynik działania programu:\r\n            ConcreteComponent operation\r\n            Added behavior by ConcreteDecorator\r\n        */\r\n    }\r\n}", "#I1#FajnyInterfejs# #CC1#Klasa# #AC1#AbstrakcyjnaKlasa# #C2#KlasaDekoratora#", "Structural" },
-                    { new Guid("d707e54c-de56-4ad6-a453-ec34a63da594"), "The Abstract Factory pattern provides an interface for creating families of related or dependent objects without specifying their concrete classes.", "", "Abstract Factory", "", "", "Creational" },
-                    { new Guid("e2d0fdb9-110f-46b7-a623-c91b81c28a56"), "The Factory Method pattern defines an interface for creating objects, but allows subclasses to alter the type of objects that will be created.", "", "Factory Method", "", "", "Creational" }
+                    { new Guid("15003969-5592-42bb-b3de-7b859bec03ef"), "The Decorator pattern attaches additional responsibilities to objects dynamically.", "\r\n#splitfile#\r\nusing System;\r\npublic class #C# : #AC1#\r\n{\r\n    #F;#C#\r\n    #M;#C#\r\n    public #C#(#I1# component) : base(component)\r\n    {\r\n    }\r\n\r\n    public override void Operation()\r\n    {\r\n        base.Operation();\r\n        AddedBehavior();\r\n    }\r\n\r\n    private void AddedBehavior()\r\n    {\r\n        Console.WriteLine(\"Added behavior by ConcreteDecorator\");\r\n    }\r\n}\r\n", "Decorator", "#splitfile#\r\npublic interface #I1#\r\n{\r\n    #F;#I1#\r\n    #M;#I1#\r\n    void Operation();\r\n}\r\n#splitfile#\r\npublic class #CC1# : #I1#\r\n{\r\n    #F;#CC1#\r\n    #M;#CC1#\r\n    public void Operation()\r\n    {\r\n        Console.WriteLine(\"ConcreteComponent operation\");\r\n    }\r\n}\r\n#splitfile#\r\npublic abstract class #AC1# : #I1#\r\n{\r\n    protected #I1# component;\r\n    \r\n    #F;#AC1#\r\n    #M;#AC1#\r\n\r\n    public #AC1#(#I1# component)\r\n    {\r\n        this.component = component;\r\n    }\r\n\r\n    public virtual void Operation()\r\n    {\r\n        component.Operation();\r\n    }\r\n}\r\n\r\n#DYNAMICS#\r\n#splitfile#\r\npublic class Program\r\n{\r\n    static void Main(string[] args)\r\n    {\r\n        // Tworzymy konkretne komponenty i dekorujemy je\r\n        #I1# component = new #CC1#();\r\n        #I1# decoratedComponent = new #C2#(component);\r\n\r\n        // Wywołujemy operację na dekoratorze, która przejdzie przez wszystkie dekoratory\r\n        decoratedComponent.Operation();\r\n\r\n        /*\r\n            Wynik działania programu:\r\n            ConcreteComponent operation\r\n            Added behavior by ConcreteDecorator\r\n        */\r\n    }\r\n}", "#I1#FajnyInterfejs# #CC1#Klasa# #AC1#AbstrakcyjnaKlasa# #C2#KlasaDekoratora# ", "Structural" },
+                    { new Guid("423bd3dd-6dff-43d4-ad6a-008e5133fd28"), "The Prototype pattern creates new objects by copying an existing object, known as the prototype.", "", "Prototype", "", "", "Creational" },
+                    { new Guid("53fed944-34ce-45ac-9b4f-d74868b2357a"), "The Adapter pattern allows objects with incompatible interfaces to collaborate.", "", "Adapter", "interface ITarget {\r\n    void Request();\r\n}\r\n\r\nclass Adaptee {\r\n    public void SpecificRequest() {\r\n        Console.WriteLine(\"Specific request\");\r\n    }\r\n}\r\n\r\nclass Adapter : ITarget {\r\n    private Adaptee _adaptee;\r\n\r\n    public Adapter(Adaptee adaptee) {\r\n        _adaptee = adaptee;\r\n    }\r\n\r\n    public void Request() {\r\n        _adaptee.SpecificRequest();\r\n    }\r\n}\r\n\r\nclass Client {\r\n    static void Main(string[] args) {\r\n        Adaptee adaptee = new Adaptee();\r\n        ITarget adapter = new Adapter(adaptee);\r\n        adapter.Request();\r\n    }\r\n}", "", "Structural" },
+                    { new Guid("7859bad9-4ff6-49f2-acd6-dbeb95806210"), "The Flyweight pattern minimizes memory usage and improves performance by sharing as much as possible with similar objects.", "", "Flyweight", "", "", "Structural" },
+                    { new Guid("944b82a9-dd6d-4ad6-ab8c-cb61734dfad8"), "The Composite pattern composes objects into tree structures to represent part-whole hierarchies.", "", "Composite", "", "", "Structural" },
+                    { new Guid("a71e4bcb-a115-4d5c-9f9e-ed9eb4cd891b"), "The Builder pattern separates the construction of a complex object from its representation, allowing the same construction process to create different representations.", "", "Builder", "", "", "Creational" },
+                    { new Guid("aa316d64-b022-4f56-91d7-6cb186b6c212"), "The Bridge pattern decouples an abstraction from its implementation so that the two can vary independently.", "", "Bridge", "", "", "Structural" },
+                    { new Guid("b1148d01-9fd8-474a-8e56-da59bb65d8bb"), "The Singleton pattern ensures that a class has only one instance and provides a global point of access to that instance.", "", "Singleton", "", "", "Creational" },
+                    { new Guid("cdb89e66-33c1-427b-b43c-3a879247bc25"), "The Proxy pattern provides a surrogate or placeholder for another object to control access to it.", "", "Proxy", "", "", "Structural" },
+                    { new Guid("ea3f28d0-62d0-4367-bb7b-ade9b42ec6e7"), "The Facade pattern provides a unified interface to a set of interfaces in a subsystem.", "", "Facade", "", "", "Structural" },
+                    { new Guid("f3c983c7-ea59-4066-8631-1178d234dc14"), "The Factory Method pattern defines an interface for creating objects, but allows subclasses to alter the type of objects that will be created.", "", "Factory Method", "", "", "Creational" },
+                    { new Guid("fb0db5bd-806c-4946-8d17-8ca1b481cef7"), "The Abstract Factory pattern provides an interface for creating families of related or dependent objects without specifying their concrete classes.", "", "Abstract Factory", "", "", "Creational" }
                 });
         }
 
@@ -94,62 +94,62 @@ namespace WzorceProjektowe.API.Migrations
             migrationBuilder.DeleteData(
                 table: "Patterns",
                 keyColumn: "Id",
-                keyValue: new Guid("039cf74b-3ed6-470b-97a4-c5d0b5ff51f9"));
+                keyValue: new Guid("15003969-5592-42bb-b3de-7b859bec03ef"));
 
             migrationBuilder.DeleteData(
                 table: "Patterns",
                 keyColumn: "Id",
-                keyValue: new Guid("0c583dc0-a077-465b-a728-dcb395306340"));
+                keyValue: new Guid("423bd3dd-6dff-43d4-ad6a-008e5133fd28"));
 
             migrationBuilder.DeleteData(
                 table: "Patterns",
                 keyColumn: "Id",
-                keyValue: new Guid("27eb0b5b-ed8e-4756-878d-630ba53ec970"));
+                keyValue: new Guid("53fed944-34ce-45ac-9b4f-d74868b2357a"));
 
             migrationBuilder.DeleteData(
                 table: "Patterns",
                 keyColumn: "Id",
-                keyValue: new Guid("2cb4e620-aabc-4675-bd36-56c9e2f32b46"));
+                keyValue: new Guid("7859bad9-4ff6-49f2-acd6-dbeb95806210"));
 
             migrationBuilder.DeleteData(
                 table: "Patterns",
                 keyColumn: "Id",
-                keyValue: new Guid("5808f582-29ec-49a3-b87c-461323f8cef5"));
+                keyValue: new Guid("944b82a9-dd6d-4ad6-ab8c-cb61734dfad8"));
 
             migrationBuilder.DeleteData(
                 table: "Patterns",
                 keyColumn: "Id",
-                keyValue: new Guid("622b0bc2-1bb7-466e-9eee-a2931bc4ebda"));
+                keyValue: new Guid("a71e4bcb-a115-4d5c-9f9e-ed9eb4cd891b"));
 
             migrationBuilder.DeleteData(
                 table: "Patterns",
                 keyColumn: "Id",
-                keyValue: new Guid("73fbda00-c67e-4660-8641-eabd35ba44db"));
+                keyValue: new Guid("aa316d64-b022-4f56-91d7-6cb186b6c212"));
 
             migrationBuilder.DeleteData(
                 table: "Patterns",
                 keyColumn: "Id",
-                keyValue: new Guid("78a6d753-bb49-4769-8fce-448de83578cc"));
+                keyValue: new Guid("b1148d01-9fd8-474a-8e56-da59bb65d8bb"));
 
             migrationBuilder.DeleteData(
                 table: "Patterns",
                 keyColumn: "Id",
-                keyValue: new Guid("a8605a70-b59f-4658-ab70-d275a39c5c79"));
+                keyValue: new Guid("cdb89e66-33c1-427b-b43c-3a879247bc25"));
 
             migrationBuilder.DeleteData(
                 table: "Patterns",
                 keyColumn: "Id",
-                keyValue: new Guid("cfefc139-0065-4d98-b73d-9e4cd5d3c2d4"));
+                keyValue: new Guid("ea3f28d0-62d0-4367-bb7b-ade9b42ec6e7"));
 
             migrationBuilder.DeleteData(
                 table: "Patterns",
                 keyColumn: "Id",
-                keyValue: new Guid("d707e54c-de56-4ad6-a453-ec34a63da594"));
+                keyValue: new Guid("f3c983c7-ea59-4066-8631-1178d234dc14"));
 
             migrationBuilder.DeleteData(
                 table: "Patterns",
                 keyColumn: "Id",
-                keyValue: new Guid("e2d0fdb9-110f-46b7-a623-c91b81c28a56"));
+                keyValue: new Guid("fb0db5bd-806c-4946-8d17-8ca1b481cef7"));
 
             migrationBuilder.InsertData(
                 table: "Patterns",

@@ -18,6 +18,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [files, setFiles] = useState(null);
   const [toInterpret, setToInterpret] = useState(null);
+  const [dynamicClass, setDynamicClass] = useState(null);
 
   const FetchCode = async (selectedItem) => {
     setIsLoading(true);
@@ -28,6 +29,7 @@ export default function Home() {
       setFiles(data.listCodes);
       setFileSelected(data.listCodes[0]);
       setPatternData(data.listCodes[0].content);
+      setDynamicClass(data.dynamicClass)
     }
     setIsLoading(false);
   };
@@ -42,7 +44,7 @@ export default function Home() {
     <div className="App">
       <>
         <Header FetchCode={FetchCode} />
-        <div style={{ display: "flex", flexDirection: "row", flex: 1 }}>
+        <div style={{ display: "flex", flexDirection: "row", flex: 1, paddingBottom:40 }}>
           {isLoading ? (
             <>
               <HashLoader
@@ -57,7 +59,7 @@ export default function Home() {
             </>
           ) : (
             <>
-              <PatternConfPanel fileSelected={fileSelected} files={files} setFiles={setFiles} toInterpret={toInterpret} setToInterpret={setToInterpret}/>
+              <PatternConfPanel fileSelected={fileSelected} files={files} setFiles={setFiles} toInterpret={toInterpret} setToInterpret={setToInterpret} dynamicClass={dynamicClass} />
               <div
                 style={{ display: "flex", flexDirection: "column", flex: 1 }}
               >

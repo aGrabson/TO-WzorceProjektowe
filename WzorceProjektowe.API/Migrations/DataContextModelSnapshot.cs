@@ -59,7 +59,7 @@ namespace WzorceProjektowe.API.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("27eb0b5b-ed8e-4756-878d-630ba53ec970"),
+                            Id = new Guid("53fed944-34ce-45ac-9b4f-d74868b2357a"),
                             Description = "The Adapter pattern allows objects with incompatible interfaces to collaborate.",
                             DynamicsCode = "",
                             Name = "Adapter",
@@ -69,7 +69,7 @@ namespace WzorceProjektowe.API.Migrations
                         },
                         new
                         {
-                            Id = new Guid("2cb4e620-aabc-4675-bd36-56c9e2f32b46"),
+                            Id = new Guid("aa316d64-b022-4f56-91d7-6cb186b6c212"),
                             Description = "The Bridge pattern decouples an abstraction from its implementation so that the two can vary independently.",
                             DynamicsCode = "",
                             Name = "Bridge",
@@ -79,7 +79,7 @@ namespace WzorceProjektowe.API.Migrations
                         },
                         new
                         {
-                            Id = new Guid("73fbda00-c67e-4660-8641-eabd35ba44db"),
+                            Id = new Guid("944b82a9-dd6d-4ad6-ab8c-cb61734dfad8"),
                             Description = "The Composite pattern composes objects into tree structures to represent part-whole hierarchies.",
                             DynamicsCode = "",
                             Name = "Composite",
@@ -89,17 +89,17 @@ namespace WzorceProjektowe.API.Migrations
                         },
                         new
                         {
-                            Id = new Guid("cfefc139-0065-4d98-b73d-9e4cd5d3c2d4"),
+                            Id = new Guid("15003969-5592-42bb-b3de-7b859bec03ef"),
                             Description = "The Decorator pattern attaches additional responsibilities to objects dynamically.",
                             DynamicsCode = "\r\n#splitfile#\r\nusing System;\r\npublic class #C# : #AC1#\r\n{\r\n    #F;#C#\r\n    #M;#C#\r\n    public #C#(#I1# component) : base(component)\r\n    {\r\n    }\r\n\r\n    public override void Operation()\r\n    {\r\n        base.Operation();\r\n        AddedBehavior();\r\n    }\r\n\r\n    private void AddedBehavior()\r\n    {\r\n        Console.WriteLine(\"Added behavior by ConcreteDecorator\");\r\n    }\r\n}\r\n",
                             Name = "Decorator",
                             Schema = "#splitfile#\r\npublic interface #I1#\r\n{\r\n    #F;#I1#\r\n    #M;#I1#\r\n    void Operation();\r\n}\r\n#splitfile#\r\npublic class #CC1# : #I1#\r\n{\r\n    #F;#CC1#\r\n    #M;#CC1#\r\n    public void Operation()\r\n    {\r\n        Console.WriteLine(\"ConcreteComponent operation\");\r\n    }\r\n}\r\n#splitfile#\r\npublic abstract class #AC1# : #I1#\r\n{\r\n    protected #I1# component;\r\n    \r\n    #F;#AC1#\r\n    #M;#AC1#\r\n\r\n    public #AC1#(#I1# component)\r\n    {\r\n        this.component = component;\r\n    }\r\n\r\n    public virtual void Operation()\r\n    {\r\n        component.Operation();\r\n    }\r\n}\r\n\r\n#DYNAMICS#\r\n#splitfile#\r\npublic class Program\r\n{\r\n    static void Main(string[] args)\r\n    {\r\n        // Tworzymy konkretne komponenty i dekorujemy je\r\n        #I1# component = new #CC1#();\r\n        #I1# decoratedComponent = new #C2#(component);\r\n\r\n        // Wywołujemy operację na dekoratorze, która przejdzie przez wszystkie dekoratory\r\n        decoratedComponent.Operation();\r\n\r\n        /*\r\n            Wynik działania programu:\r\n            ConcreteComponent operation\r\n            Added behavior by ConcreteDecorator\r\n        */\r\n    }\r\n}",
-                            ToInterpret = "#I1#FajnyInterfejs# #CC1#Klasa# #AC1#AbstrakcyjnaKlasa# #C2#KlasaDekoratora#",
+                            ToInterpret = "#I1#FajnyInterfejs# #CC1#Klasa# #AC1#AbstrakcyjnaKlasa# #C2#KlasaDekoratora# ",
                             Type = "Structural"
                         },
                         new
                         {
-                            Id = new Guid("622b0bc2-1bb7-466e-9eee-a2931bc4ebda"),
+                            Id = new Guid("ea3f28d0-62d0-4367-bb7b-ade9b42ec6e7"),
                             Description = "The Facade pattern provides a unified interface to a set of interfaces in a subsystem.",
                             DynamicsCode = "",
                             Name = "Facade",
@@ -109,7 +109,7 @@ namespace WzorceProjektowe.API.Migrations
                         },
                         new
                         {
-                            Id = new Guid("039cf74b-3ed6-470b-97a4-c5d0b5ff51f9"),
+                            Id = new Guid("7859bad9-4ff6-49f2-acd6-dbeb95806210"),
                             Description = "The Flyweight pattern minimizes memory usage and improves performance by sharing as much as possible with similar objects.",
                             DynamicsCode = "",
                             Name = "Flyweight",
@@ -119,7 +119,7 @@ namespace WzorceProjektowe.API.Migrations
                         },
                         new
                         {
-                            Id = new Guid("0c583dc0-a077-465b-a728-dcb395306340"),
+                            Id = new Guid("cdb89e66-33c1-427b-b43c-3a879247bc25"),
                             Description = "The Proxy pattern provides a surrogate or placeholder for another object to control access to it.",
                             DynamicsCode = "",
                             Name = "Proxy",
@@ -129,7 +129,7 @@ namespace WzorceProjektowe.API.Migrations
                         },
                         new
                         {
-                            Id = new Guid("e2d0fdb9-110f-46b7-a623-c91b81c28a56"),
+                            Id = new Guid("f3c983c7-ea59-4066-8631-1178d234dc14"),
                             Description = "The Factory Method pattern defines an interface for creating objects, but allows subclasses to alter the type of objects that will be created.",
                             DynamicsCode = "",
                             Name = "Factory Method",
@@ -139,7 +139,7 @@ namespace WzorceProjektowe.API.Migrations
                         },
                         new
                         {
-                            Id = new Guid("d707e54c-de56-4ad6-a453-ec34a63da594"),
+                            Id = new Guid("fb0db5bd-806c-4946-8d17-8ca1b481cef7"),
                             Description = "The Abstract Factory pattern provides an interface for creating families of related or dependent objects without specifying their concrete classes.",
                             DynamicsCode = "",
                             Name = "Abstract Factory",
@@ -149,7 +149,7 @@ namespace WzorceProjektowe.API.Migrations
                         },
                         new
                         {
-                            Id = new Guid("a8605a70-b59f-4658-ab70-d275a39c5c79"),
+                            Id = new Guid("a71e4bcb-a115-4d5c-9f9e-ed9eb4cd891b"),
                             Description = "The Builder pattern separates the construction of a complex object from its representation, allowing the same construction process to create different representations.",
                             DynamicsCode = "",
                             Name = "Builder",
@@ -159,7 +159,7 @@ namespace WzorceProjektowe.API.Migrations
                         },
                         new
                         {
-                            Id = new Guid("5808f582-29ec-49a3-b87c-461323f8cef5"),
+                            Id = new Guid("423bd3dd-6dff-43d4-ad6a-008e5133fd28"),
                             Description = "The Prototype pattern creates new objects by copying an existing object, known as the prototype.",
                             DynamicsCode = "",
                             Name = "Prototype",
@@ -169,7 +169,7 @@ namespace WzorceProjektowe.API.Migrations
                         },
                         new
                         {
-                            Id = new Guid("78a6d753-bb49-4769-8fce-448de83578cc"),
+                            Id = new Guid("b1148d01-9fd8-474a-8e56-da59bb65d8bb"),
                             Description = "The Singleton pattern ensures that a class has only one instance and provides a global point of access to that instance.",
                             DynamicsCode = "",
                             Name = "Singleton",

@@ -7,17 +7,31 @@ export default function PatternCodePanel({ patternData, toInterpret }) {
   const [code, setCode] = useState(null);
 
   useEffect(() => {
-    if(toInterpret !== null)
-    {
+    if (toInterpret !== null) {
       const splittedInterpret = toInterpret.split(" ");
       let replacedStr = patternData;
       splittedInterpret.map((item, index) => {
         const hashSplitted = item.split("#");
-        replacedStr = replacedStr.replaceAll("#" + hashSplitted[1] + "#", hashSplitted[2])
-      })
+        const regex = new RegExp(`#F\\d+;${hashSplitted[1]}.*`);
+        const test = splittedInterpret.filter((x) => regex.test(x));
+        let fieldText = "";
+        test.forEach((fieldItem) => {
+          const fieldHashSplitted = fieldItem.split("#");
+
+          const tmp = fieldHashSplitted[1].split(";");
+          fieldText += `public ${tmp[2]} ${fieldHashSplitted[2]};\n\t`;
+        });
+        replacedStr = replacedStr.replaceAll(
+          `#F;#${hashSplitted[1]}#`,
+          fieldText
+        );
+        replacedStr = replacedStr.replaceAll(
+          "#" + hashSplitted[1] + "#",
+          hashSplitted[2]
+        );
+      });
       setCode(replacedStr);
     }
-
   }, [toInterpret, patternData]);
 
   return (
@@ -28,9 +42,7 @@ export default function PatternCodePanel({ patternData, toInterpret }) {
             {code}
           </SyntaxHighlighter>
         </div>
-      ) : (
-        null
-      )}
+      ) : null}
     </div>
   );
 }

@@ -55,7 +55,7 @@ export default function FileListPanel({ files, onFileSelect, toInterpret }) {
 
   const replaceTags = (fileName) => {
     let replacedFileName = fileName;
-    if (splittedInterpret !== null) {
+    if (splittedInterpret !== null && fileName) {
       splittedInterpret.forEach((item) => {
         const tag = item.split("#");
         if (fileName.includes("#" + tag[1] + "#")) {
