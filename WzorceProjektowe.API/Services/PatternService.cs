@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Evaluation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.FileSystemGlobbing.Internal;
 using System;
 using System.ComponentModel;
+using System.Diagnostics.Metrics;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using WzorceProjektowe.API.Data;
@@ -323,11 +325,31 @@ public class #C# : #AC1#
             }
 
             string[] replacements = patternEntity.ToInterpret.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-            //string[] replacements = { "#I1#FajnyInterfejs#", "#C1#Klasa#", "#AC1#AbstrakcyjnaKlasa#", "#C2#KlasaDekoratora#", "#C#NowyDekorator1#", "#C#NowyDekorator2#" };
+            //string[] replacements = { "#I1#FajnyInterfejs#", "#C1#Klasa#", "#AC1#AbstrakcyjnaKlasa#", "#C2#KlasaDekoratora#"};
             //string filledCode = FillTemplate(patternEntity.Schema, patternEntity.DynamicsCode, replacements);
-            string filledCode = patternEntity.Schema.Replace(separator + "DYNAMICS" + separator, " ");
+            List<Tuple<string, string>> dynamicClasses = new();
+            foreach (var item in replacements)
+            {
+                if (Regex.IsMatch(item, separator + "C.*" + separator) && item.EndsWith(separator))
+                {
+                    if (Regex.IsMatch(item, separator + "CC.*" + separator))
+                    {
+                        continue;
+                    }
+                    string[] parts = item.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+                    if (parts.Length == 2)
+                    {
+                        string key = parts[0].Trim();
+                        string name = parts[1].Trim();
+                        dynamicClasses.Add(Tuple.Create(key, name));
+                    }
+                }
+            }
+            string dynamicClass = GenerateDynamics(patternEntity.DynamicsCode, dynamicClasses);
+
+            string filledCode = patternEntity.Schema.Replace(separator + "DYNAMICS" + separator, dynamicClass);
             string[] splitCodes = filledCode.Split("#splitfile#", StringSplitOptions.RemoveEmptyEntries);
-            if(splitCodes.Length != replacements.Length+1) 
+            if (splitCodes.Length != replacements.Length + 1)
             {
                 return new NotFoundResult();
             }
