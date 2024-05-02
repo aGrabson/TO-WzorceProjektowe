@@ -38,6 +38,22 @@ namespace WzorceProjektowe.API.Controllers
         {
             return await _patternService.GetPatternCodeByName(request);
         }
+        [HttpPost("DownloadCode")]
+        public async Task<IActionResult> DownloadCode([FromBody] DownloadCodeRequestDto request)
+        {
+            try
+            {
+                byte[] zipBytes = await _patternService.DownloadCode(request);
+
+                // Return the ZIP file as response
+                return File(zipBytes, "application/zip", $"{request.PatternName}.zip");
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions and return appropriate response
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
 
     }
 }

@@ -9,5 +9,8 @@ namespace WzorceProjektowe.API.Entities
         public string Schema { get; set; }
         public string ToInterpret { get; set; }
         public string DynamicsCode { get; set; }
+        public string DynamicMethodI { get; set; }
+        public string DynamicMethodC { get; set; }
+        public string DynamicMethodAC { get; set; }
     }
 }

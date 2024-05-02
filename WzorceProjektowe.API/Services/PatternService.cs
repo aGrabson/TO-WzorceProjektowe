@@ -6,6 +6,7 @@ using Microsoft.Extensions.FileSystemGlobbing.Internal;
 using System;
 using System.ComponentModel;
 using System.Diagnostics.Metrics;
+using System.IO.Compression;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using WzorceProjektowe.API.Data;
@@ -170,9 +171,9 @@ public class #C# : #AC1#
                         dynamicClasses.Add(Tuple.Create(key, name));
                     }
                 }
-                else if (trimmedLine.StartsWith(separator + "F") && trimmedLine.EndsWith(separator))
+                else if (Regex.IsMatch(trimmedLine, separator + "F.*" + separator) && trimmedLine.EndsWith(separator))
                 {
-                    //#P;I1;int#nazwa#
+                    //#F1;I1;int#nazwa#
                     string[] parts = trimmedLine.Split(separator, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 2)
                     {
@@ -187,10 +188,10 @@ public class #C# : #AC1#
                         }
                     }
                 }
-                else if (trimmedLine.StartsWith(separator + "M") && trimmedLine.EndsWith(separator))
+                else if (Regex.IsMatch(trimmedLine, separator + "M.*" + separator) && trimmedLine.EndsWith(separator))
                 {
                     //bylo #M;I1#nazwa#
-                    //#M;I1;void;int i,double x#nazwa#
+                    //#M1;I1;void;int i,double x#nazwa#
                     string[] parts = trimmedLine.Split(separator, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 2)
                     {
@@ -308,16 +309,18 @@ public class #C# : #AC1#
             string[] replacements = request.ToInterpret.Split(" ", StringSplitOptions.RemoveEmptyEntries);
             //string[] replacements = { "#I1#FajnyInterfejs#", "#C1#Klasa#", "#AC1#AbstrakcyjnaKlasa#", "#C2#KlasaDekoratora#", "#C#NowyDekorator1#", "#C#NowyDekorator2#" };
             string filledCode = FillTemplate(patternEntity.Schema, patternEntity.DynamicsCode, replacements);
+
+            filledCode = filledCode.Replace("#splitfile#", "");
             //Wywolanie w swagger
             //            {
             //                "patternID": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-            //  "toInterpret": "#I1#FajnyInterfejs# #CC1#Klasa# #AC1#AbstrakcyjnaKlasa# #C2#KlasaDekoratora# #C5#NowyDekorator1# #C7#NowyDekorator2#  #F;CC1;int#nazwa9#  #F;C2;int#nazwa3# #C3#Klasaasdas# #M;I1;int;string.s,int.i,double.x#metka#"
+            //  "toInterpret": "#I1#FajnyInterfejs# #CC1#Klasa# #AC1#AbstrakcyjnaKlasa# #C2#KlasaDekoratora# #C5#NowyDekorator1# #C7#NowyDekorator2#  #F1;CC1;int#nazwa9#  #F2;C2;int#nazwa3# #C3#Klasaasdas# #M1;I1;int;string.s,int.i,double.x#metka#"
             //}
+
             return new OkObjectResult(filledCode);
         }
         public async Task<IActionResult> GetPatternCodeByName(GetPatternCodeByNameRequestDto request)
         {
-            //pobranie patternu dla dodatkowych klas oraz podstawowego szablonu
             var patternEntity = await _context.Patterns.FirstOrDefaultAsync(x => x.Name == request.PatternName);
             if (patternEntity == null)
             {
@@ -325,8 +328,6 @@ public class #C# : #AC1#
             }
 
             string[] replacements = patternEntity.ToInterpret.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-            //string[] replacements = { "#I1#FajnyInterfejs#", "#C1#Klasa#", "#AC1#AbstrakcyjnaKlasa#", "#C2#KlasaDekoratora#"};
-            //string filledCode = FillTemplate(patternEntity.Schema, patternEntity.DynamicsCode, replacements);
             List<Tuple<string, string>> dynamicClasses = new();
             foreach (var item in replacements)
             {
@@ -353,10 +354,7 @@ public class #C# : #AC1#
             {
                 return new NotFoundResult();
             }
-            GetPatternCodeByNameResponseDto response = new GetPatternCodeByNameResponseDto();
-            response.PatternName = patternEntity.Name;
-            response.ToInterpret = patternEntity.ToInterpret;
-            response.DynamicClass = patternEntity.DynamicsCode;
+            GetPatternCodeByNameResponseDto response = new(patternEntity.Name, patternEntity.ToInterpret, patternEntity.DynamicsCode.Replace("#splitfile#",""), patternEntity.DynamicMethodI, patternEntity.DynamicMethodC, patternEntity.DynamicMethodAC);
             int i = 0;
             for(; i<replacements.Length; i++ )
             {
@@ -365,6 +363,58 @@ public class #C# : #AC1#
             response.ListCodes.Add(new CodeFile { Content = splitCodes[i], FileName = "Program" });
             return new OkObjectResult(response);
         }
+        public async Task<byte[]> DownloadCode(DownloadCodeRequestDto request)
+        {
+            var patternEntity = await _context.Patterns.FirstOrDefaultAsync(x => x.Name == request.PatternName);
+            if (patternEntity == null)
+            {
+                return Array.Empty<byte>();
+            }
+            string[] replacements = request.ToInterpret.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+            string filledCode = FillTemplate(patternEntity.Schema, patternEntity.DynamicsCode, replacements);
+            replacements = replacements.Where(r => r != null).ToArray();
+            string pattern = @"^(#I|#C|#AC|#CC)\d+#.*$";
 
+            List<string> fileNames = new();
+
+            // Iterate through inputs and check if each element matches the pattern
+            foreach (string input in replacements)
+            {
+                if (Regex.IsMatch(input, pattern))
+                {
+                    string[] parts = input.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+                    if (parts.Length == 2)
+                        fileNames.Add(parts.ElementAt(1).Trim());
+                }
+            }
+
+            string[] files = filledCode.Split(new string[] { "#splitfile#" }, StringSplitOptions.RemoveEmptyEntries);
+
+            // Prepare a memory stream to store files
+            using (MemoryStream ms = new())
+            {
+                using (ZipArchive archive = new(ms, ZipArchiveMode.Create, true))
+                {
+                    int i = 0;
+                    for(; i < fileNames.Count; i++)
+                    {
+                        ZipArchiveEntry entry = archive.CreateEntry(fileNames.ElementAt(i) + ".cs");
+                        using (StreamWriter writer = new(entry.Open()))
+                        {
+                            await writer.WriteAsync(files.ElementAt(i));
+                        }
+                    }
+                    ZipArchiveEntry entry2 = archive.CreateEntry("Program.cs");
+                    using (StreamWriter writer = new(entry2.Open()))
+                    {
+                        await writer.WriteAsync(files.ElementAt(i));
+                    }
+
+                }
+
+                byte[] zipBytes = ms.ToArray();
+                return zipBytes;
+            }
+        }
     }
 }
