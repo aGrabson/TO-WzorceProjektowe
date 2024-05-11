@@ -17,13 +17,28 @@ export default function PatternCodePanel({ patternData, toInterpret }) {
         let fieldText = "";
         test.forEach((fieldItem) => {
           const fieldHashSplitted = fieldItem.split("#");
-
           const tmp = fieldHashSplitted[1].split(";");
           fieldText += `public ${tmp[2]} ${fieldHashSplitted[2]};\n\t`;
         });
+
+        const regexMethod = new RegExp(`#M\\d+;${hashSplitted[1]}.*`);
+        const testMethod = splittedInterpret.filter((x) => regexMethod.test(x));
+        let methodText = "";
+        testMethod.forEach((methodItem) => {
+          const methodHashSplitted = methodItem.split("#");
+          const tmp = methodHashSplitted[1].split(";");
+          const parametersTmp = tmp[3].split(".").filter(Boolean);
+          const parameters = parametersTmp.join(" ");
+          methodText += `public ${tmp[2]} ${methodHashSplitted[2]}(${parameters.slice(0, -1)}){}\n\t`;
+        });
+
         replacedStr = replacedStr.replaceAll(
           `#F;#${hashSplitted[1]}#`,
           fieldText
+        );
+        replacedStr = replacedStr.replaceAll(
+          `#M;#${hashSplitted[1]}#`,
+          methodText
         );
         replacedStr = replacedStr.replaceAll(
           "#" + hashSplitted[1] + "#",
