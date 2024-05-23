@@ -22,10 +22,15 @@ namespace WzorceProjektowe.API.Data
                 Type = "Structural",
                 Schema = "interface ITarget {\r\n    void Request();\r\n}\r\n\r\nclass Adaptee {\r\n    public void SpecificRequest() {\r\n        Console.WriteLine(\"Specific request\");\r\n    }\r\n}\r\n\r\nclass Adapter : ITarget {\r\n    private Adaptee _adaptee;\r\n\r\n    public Adapter(Adaptee adaptee) {\r\n        _adaptee = adaptee;\r\n    }\r\n\r\n    public void Request() {\r\n        _adaptee.SpecificRequest();\r\n    }\r\n}\r\n\r\nclass Client {\r\n    static void Main(string[] args) {\r\n        Adaptee adaptee = new Adaptee();\r\n        ITarget adapter = new Adapter(adaptee);\r\n        adapter.Request();\r\n    }\r\n}",
                 DynamicsCode = "",
+                SchemaJava = "",
+                DynamicsCodeJava = "",
                 ToInterpret = "",
                 DynamicMethodI = "",
                 DynamicMethodC = "",
                 DynamicMethodAC = "",
+                DynamicMethodIJava = "",
+                DynamicMethodCJava = "",
+                DynamicMethodACJava = "",
             },
             new PatternEntity
             {
@@ -35,10 +40,15 @@ namespace WzorceProjektowe.API.Data
                 Type = "Structural",
                 Schema = "",
                 DynamicsCode = "",
+                SchemaJava = "",
+                DynamicsCodeJava = "",
                 ToInterpret = "",
                 DynamicMethodI = "",
                 DynamicMethodC = "",
                 DynamicMethodAC = "",
+                DynamicMethodIJava = "",
+                DynamicMethodCJava = "",
+                DynamicMethodACJava = "",
             },
             new PatternEntity
             {
@@ -48,10 +58,15 @@ namespace WzorceProjektowe.API.Data
                 Type = "Structural",
                 Schema = "",
                 DynamicsCode = "",
+                SchemaJava = "",
+                DynamicsCodeJava = "",
                 ToInterpret = "",
                 DynamicMethodI = "",
                 DynamicMethodC = "",
                 DynamicMethodAC = "",
+                DynamicMethodIJava = "",
+                DynamicMethodCJava = "",
+                DynamicMethodACJava = "",
             },
             new PatternEntity
             {
@@ -63,6 +78,7 @@ namespace WzorceProjektowe.API.Data
 public interface #I1#
 {
     #F;#I1#
+
     #M;#I1#
     void Operation();
 }
@@ -70,6 +86,7 @@ public interface #I1#
 public class #CC1# : #I1#
 {
     #F;#CC1#
+
     #M;#CC1#
     public void Operation()
     {
@@ -80,10 +97,9 @@ public class #CC1# : #I1#
 public abstract class #AC1# : #I1#
 {
     protected #I1# component;
-    
     #F;#AC1#
-    #M;#AC1#
 
+    #M;#AC1#
     public #AC1#(#I1# component)
     {
         this.component = component;
@@ -94,7 +110,6 @@ public abstract class #AC1# : #I1#
         component.Operation();
     }
 }
-
 #DYNAMICS#
 #splitfile#
 public class Program
@@ -107,11 +122,11 @@ public class Program
         decoratedComponent.Operation();
     }
 }",
-                DynamicsCode = @"
-#splitfile#
+                DynamicsCode = @"#splitfile#
 public class #C# : #AC1#
 {
     #F;#C#
+
     #M;#C#
     public #C#(#I1# component) : base(component)
     {
@@ -129,15 +144,87 @@ public class #C# : #AC1#
     }
 }
 ",
+                SchemaJava = @"#splitfile#
+public interface #I1# {
+    #F;#I1#
+	
+    #M;#I1#
+    void Operation();
+}
+#splitfile#
+public class #CC1# implements #I1# {
+    #F;#CC1#
+	
+    #M;#CC1#
+    @Override
+    public void Operation() {
+        System.out.println(""ConcreteComponent operation"");
+    }
+}
+#splitfile#
+public abstract class #AC1# implements #I1# {
+    protected #I1# component;
+    #F;#AC1#
+	
+    #M;#AC1#
+    public #AC1#(#I1# component) {
+        this.component = component;
+    }
+
+    @Override
+    public void Operation() {
+        component.Operation();
+    }
+}
+#DYNAMICS#
+#splitfile#
+public class Program {
+    public static void main(String[] args) {
+        #I1# component = new #CC1#();
+        #I1# decoratedComponent = new #C2#(component);
+
+        decoratedComponent.Operation();
+    }
+}",
+                DynamicsCodeJava = @"#splitfile#
+public class #C# extends #AC1# {
+    #F;#C#
+	
+    #M;#C#
+    public #C#(#I1# component) {
+        super(component);
+    }
+
+    @Override
+    public void Operation() {
+        super.Operation();
+        AddedBehavior();
+    }
+
+    private void AddedBehavior() {
+        System.out.println(""Added behavior by ConcreteDecorator"");
+    }
+}",
                 ToInterpret = "#I1#FajnyInterfejs# #CC1#Klasa# #AC1#AbstrakcyjnaKlasa# #C2#KlasaDekoratora# ",
                 DynamicMethodI = $"#TYPE# #NAME# (#PARAMS#);\n    ",
-                DynamicMethodC = @$"
+                DynamicMethodAC = @$"
     public virtual #TYPE# #NAME#(#PARAMS#){{
         component.#NAME#(#NOTYPEPARAMS#);
     }}",
-                DynamicMethodAC = @$"
+                DynamicMethodC = @$"
     public #TYPE# #NAME#(#PARAMS#){{
         throw new NotImplementedException();
+    }}",
+                DynamicMethodIJava = $"#TYPE# #NAME# (#PARAMS#);\n    ",
+                DynamicMethodACJava = @$"
+    @Override
+    public #TYPE# #NAME#(#PARAMS#){{
+        component.#NAME#(#NOTYPEPARAMS#);
+    }}",
+                DynamicMethodCJava = @$"
+    @Override
+    public #TYPE# #NAME#(#PARAMS#){{
+        throw new UnsupportedOperationException(""Not implemented yet"");
     }}",
             },
             new PatternEntity
@@ -148,10 +235,15 @@ public class #C# : #AC1#
                 Type = "Structural",
                 Schema = "",
                 DynamicsCode = "",
-                ToInterpret= "",
+                SchemaJava = "",
+                DynamicsCodeJava = "",
+                ToInterpret = "",
                 DynamicMethodI = "",
                 DynamicMethodC = "",
                 DynamicMethodAC = "",
+                DynamicMethodIJava = "",
+                DynamicMethodCJava = "",
+                DynamicMethodACJava = "",
             },
             new PatternEntity
             {
@@ -161,10 +253,15 @@ public class #C# : #AC1#
                 Type = "Structural",
                 Schema = @"",
                 DynamicsCode = @"",
+                SchemaJava = "",
+                DynamicsCodeJava = "",
                 ToInterpret = "",
                 DynamicMethodI = "",
                 DynamicMethodC = "",
                 DynamicMethodAC = "",
+                DynamicMethodIJava = "",
+                DynamicMethodCJava = "",
+                DynamicMethodACJava = "",
             },
             new PatternEntity
             {
@@ -174,10 +271,15 @@ public class #C# : #AC1#
                 Type = "Structural",
                 Schema = "",
                 DynamicsCode = "",
+                SchemaJava = "",
+                DynamicsCodeJava = "",
                 ToInterpret = "",
                 DynamicMethodI = "",
                 DynamicMethodC = "",
                 DynamicMethodAC = "",
+                DynamicMethodIJava = "",
+                DynamicMethodCJava = "",
+                DynamicMethodACJava = "",
             },
             new PatternEntity
             {
@@ -187,10 +289,15 @@ public class #C# : #AC1#
                 Type = "Creational",
                 Schema = "",
                 DynamicsCode = "",
+                SchemaJava = "",
+                DynamicsCodeJava = "",
                 ToInterpret = "",
                 DynamicMethodI = "",
                 DynamicMethodC = "",
                 DynamicMethodAC = "",
+                DynamicMethodIJava = "",
+                DynamicMethodCJava = "",
+                DynamicMethodACJava = "",
             },
             new PatternEntity
             {
@@ -200,10 +307,15 @@ public class #C# : #AC1#
                 Type = "Creational",
                 Schema = "",
                 DynamicsCode = "",
+                SchemaJava = "",
+                DynamicsCodeJava = "",
                 ToInterpret = "",
                 DynamicMethodI = "",
                 DynamicMethodC = "",
                 DynamicMethodAC = "",
+                DynamicMethodIJava = "",
+                DynamicMethodCJava = "",
+                DynamicMethodACJava = "",
             },
             new PatternEntity
             {
@@ -211,10 +323,12 @@ public class #C# : #AC1#
                 Name = "Builder",
                 Description = "The Builder pattern separates the construction of a complex object from its representation, allowing the same construction process to create different representations.",
                 Type = "Creational",
-                Schema = @"#splitfile#public interface #I1#
+                Schema = @"#splitfile#
+public interface #I1#
     {
-	#F;#I1#
-	#M;#I1#
+	    #F;#I1#
+
+	    #M;#I1#
         void BuildPartA();
         
         void BuildPartB();
@@ -223,10 +337,9 @@ public class #C# : #AC1#
 public class #CC1# : #I1#
     {
         private #CC2# _product = new #CC2#();
-		
         #F;#CC1#
+
 		#M;#CC1#
-		
         public #CC1#()
         {
             this.Reset();
@@ -259,10 +372,10 @@ public class #CC1# : #I1#
 #splitfile#
 public class #CC2#
     {
-		#F;#CC2#
-		#M;#CC2#
         private List<string> _parts = new List<string>();
-        
+        #F;#CC2#
+
+		#M;#CC2#
         public void Add(string part)
         {
             this._parts.Add(part);
@@ -309,10 +422,9 @@ class Program
 public class #C#
     {
         private #I1# _builder;
-		
         #F;#C#
+
 		#M;#C#
-		
         public #I1# Builder
         {
             set { _builder = value; } 
@@ -329,10 +441,129 @@ public class #C#
             this._builder.BuildPartB();
         }
     }",
-                ToInterpret = "#I1#Interfejs# #CC1#FajnaKlasa# #CC2#Produkt# #C1#KonkretnyBuilder#",
-                DynamicMethodI = "",
-                DynamicMethodC = "",
-                DynamicMethodAC = "",
+                SchemaJava = @"#splitfile#
+public interface #I1# {
+    #F;#I1#
+	
+    #M;#I1#
+    void BuildPartA();
+    void BuildPartB();
+}
+#splitfile#
+public class #CC1# implements #I1# {
+    private #CC2# product = new #CC2#();
+    #F;#CC1#
+	
+    #M;#CC1#
+    public #CC1#() {
+        this.Reset();
+    }
+
+    public void Reset() {
+        this.product = new #CC2#();
+    }
+
+    @Override
+    public void BuildPartA() {
+        this.product.Add(""PartA1"");
+    }
+
+    @Override
+    public void BuildPartB() {
+        this.product.Add(""PartB1"");
+    }
+
+    public #CC2# GetProduct() {
+        #CC2# result = this.product;
+        this.Reset();
+        return result;
+    }
+}
+#splitfile#
+public class #CC2# {
+    private List<String> parts = new ArrayList<>();
+	#F;#CC2#
+	
+    #M;#CC2#
+    public void Add(String part) {
+        this.parts.add(part);
+    }
+
+    public String ListParts() {
+        StringBuilder str = new StringBuilder();
+
+        for (int i = 0; i < this.parts.size(); i++) {
+            str.append(this.parts.get(i)).append("", "");
+        }
+
+        if (str.length() > 0) {
+            str.setLength(str.length() - 2);
+        }
+
+        return ""Product parts: "" + str + ""\n"";
+    }
+}
+#DYNAMICS#
+#splitfile#
+public class Program {
+    public static void main(String[] args) {
+        #C# director = new #C#();
+        #CC1# builder = new #CC1#();
+        director.setBuilder(builder);
+
+        System.out.println(""Standard basic product:"");
+        director.BuildMinimalViableProduct();
+        System.out.println(builder.GetProduct().ListParts());
+
+        System.out.println(""Standard full featured product:"");
+        director.BuildFullFeaturedProduct();
+        System.out.println(builder.GetProduct().ListParts());
+
+        System.out.println(""Custom product:"");
+        builder.BuildPartA();
+        System.out.print(builder.GetProduct().ListParts());
+    }
+}",
+                DynamicsCodeJava = @"#splitfile#
+public class #C# {
+    private #I1# builder;
+    #F;#C#
+	
+    #M;#C#
+    public void setBuilder(#I1# builder) {
+        this.builder = builder;
+    }
+
+    public void BuildMinimalViableProduct() {
+        this.builder.BuildPartA();
+    }
+
+    public void BuildFullFeaturedProduct() {
+        this.builder.BuildPartA();
+        this.builder.BuildPartB();
+    }
+}",
+                ToInterpret = "#I1#Interfejs# #CC1#FajnaKlasa# #CC2#Produkt# #C1#KonkretnyBuilder# ",
+                DynamicMethodI = $"#TYPE# #NAME# (#PARAMS#);\n    ",
+                DynamicMethodAC = @$"
+    public virtual #TYPE# #NAME#(#PARAMS#){{
+        component.#NAME#(#NOTYPEPARAMS#);
+    }}",
+                DynamicMethodC = @$"
+    public #TYPE# #NAME#(#PARAMS#){{
+        throw new NotImplementedException();
+    }}",
+                DynamicMethodIJava = $"#TYPE# #NAME# (#PARAMS#);\n    ",
+                DynamicMethodACJava = @$"
+    @Override
+    public #TYPE# #NAME#(#PARAMS#){{
+        component.#NAME#(#NOTYPEPARAMS#);
+    }}",
+                DynamicMethodCJava = @$"
+    @Override
+    public #TYPE# #NAME#(#PARAMS#){{
+        throw new UnsupportedOperationException(""Not implemented yet"");
+    }}",
             },
             new PatternEntity
             {
@@ -342,10 +573,15 @@ public class #C#
                 Type = "Creational",
                 Schema = "",
                 DynamicsCode = "",
+                SchemaJava = "",
+                DynamicsCodeJava = "",
                 ToInterpret = "",
                 DynamicMethodI = "",
                 DynamicMethodC = "",
                 DynamicMethodAC = "",
+                DynamicMethodIJava = "",
+                DynamicMethodCJava = "",
+                DynamicMethodACJava = "",
             },
             new PatternEntity
             {
@@ -355,10 +591,15 @@ public class #C#
                 Type = "Creational",
                 Schema = "",
                 DynamicsCode = "",
+                SchemaJava = "",
+                DynamicsCodeJava = "",
                 ToInterpret = "",
                 DynamicMethodI = "",
                 DynamicMethodC = "",
                 DynamicMethodAC = "",
+                DynamicMethodIJava = "",
+                DynamicMethodCJava = "",
+                DynamicMethodACJava = "",
             },
             new PatternEntity
             {
@@ -370,17 +611,18 @@ public class #C#
 public interface #I1#
 {
 	#F;#I1#
+
 	#M;#I1#
     void Update();
 }
 #splitfile#
 public class #CC1# : #I1#
 {
-	#F;#CC1#
-	#M;#CC1#
     private #CC2# _observable;
     private int _state;
+    #F;#CC1#
 
+	#M;#CC1#
     public #CC1#(#CC2# observable)
     {
         _observable = observable;
@@ -395,10 +637,11 @@ public class #CC1# : #I1#
 #splitfile#
 public abstract class #AC1#
 {
-	#F;#AC1#
-	#M;#AC1#
+	
     private List<#I1#> _observers = new List<#I1#>();
+    #F;#AC1#
 
+	#M;#AC1#
     public void AddObserver(#I1# observer)
     {
         _observers.Add(observer);
@@ -420,10 +663,10 @@ public abstract class #AC1#
 #splitfile#
 public class #CC2# : #I1#
 {
-	#F;#CC2#
-	#M;#CC2#
     private int _state;
+    #F;#CC2#
 
+	#M;#CC2#
     public void UpdateState()
     {
         _state++;
@@ -445,7 +688,6 @@ public class Program
         #I1# observer = new ObserverImpl(observable);
         observable.AddObserver(observer);
 
-        // Symulacja aktualizacji stanu
         observable.UpdateState();
         observable.UpdateState();
     }
@@ -453,10 +695,10 @@ public class Program
                 DynamicsCode = @"#splitfile#
 class #C# : #I1#
 {
-	#F;#C#
-	#M;#C#
     private int _state;
+    #F;#C#
 
+	#M;#C#
     public void UpdateState()
     {
         _state++;
@@ -468,10 +710,112 @@ class #C# : #I1#
         return _state;
     }
 }",
-                ToInterpret = "#I1#Interfejs# #CC1#Obserwator# #AC1#Abstrakcyjnaklasa# #CC2#ObserwatorImpl#",
-                DynamicMethodI = "",
-                DynamicMethodC = "",
-                DynamicMethodAC = "",
+                SchemaJava = @"#splitfile#
+public interface #I1# {
+	#F;#I1#
+	
+	#M;#I1#
+    void Update();
+}
+#splitfile#
+public class #CC1# implements #I1# {
+    private #CC2# observable;
+    private int state;
+	#F;#CC1#
+
+	#M;#CC1#
+    public #CC1#(#CC2# observable) {
+        this.observable = observable;
+    }
+
+    @Override
+    public void Update() {
+        state = observable.getState();
+        System.out.println(""new state = "" + state);
+    }
+}
+#splitfile#
+public abstract class #AC1# {
+    private List<#I1#> observers = new ArrayList<>();
+	#F;#AC1#
+
+	#M;#AC1#
+    public void addObserver(#I1# observer) {
+        observers.add(observer);
+    }
+
+    public void removeObserver(#I1# observer) {
+        observers.remove(observer);
+    }
+
+    public void notifyObservers() {
+        for (#I1# observer : observers) {
+            observer.Update();
+        }
+    }
+}
+#splitfile#
+public class #CC2# extends #AC1# {
+    private int state;
+	#F;#CC2#
+	
+	#M;#CC2#
+    public void updateState() {
+        state++;
+        notifyObservers();
+    }
+
+    public int getState() {
+        return state;
+    }
+}
+#DYNAMICS#
+#splitfile#
+public class Program {
+    public static void main(String[] args) {
+        #CC2# observable = new #CC2#();
+        #I1# observer = new #CC1#(observable);
+        observable.addObserver(observer);
+
+        observable.updateState();
+        observable.updateState();
+    }
+}",
+                DynamicsCodeJava = @"#splitfile#
+public class #C# extends #AC1# {
+    private int state;
+	#F;#C#
+
+	#M;#C#
+    public void updateState() {
+        state++;
+        notifyObservers();
+    }
+
+    public int getState() {
+        return state;
+    }
+}",
+                ToInterpret = "#I1#Interfejs# #CC1#Obserwator# #AC1#Abstrakcyjnaklasa# #CC2#ObserwatorImpl# ",
+                DynamicMethodI = $"#TYPE# #NAME# (#PARAMS#);\n    ",
+                DynamicMethodAC = @$"
+    public virtual #TYPE# #NAME#(#PARAMS#){{
+        component.#NAME#(#NOTYPEPARAMS#);
+    }}",
+                DynamicMethodC = @$"
+    public #TYPE# #NAME#(#PARAMS#){{
+        throw new NotImplementedException();
+    }}",
+                DynamicMethodIJava = $"#TYPE# #NAME# (#PARAMS#);\n    ",
+                DynamicMethodACJava = @$"
+    public #TYPE# #NAME#(#PARAMS#){{
+        throw new UnsupportedOperationException(""Not implemented yet"");
+    }}",
+                DynamicMethodCJava = @$"
+    @Override
+    public #TYPE# #NAME#(#PARAMS#){{
+        throw new UnsupportedOperationException(""Not implemented yet"");
+    }}",
             }
             );
         }

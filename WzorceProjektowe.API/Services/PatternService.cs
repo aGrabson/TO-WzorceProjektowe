@@ -280,50 +280,100 @@ namespace WzorceProjektowe.API.Services
                 return Array.Empty<byte>();
             }
             string[] replacements = request.ToInterpret.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-            string filledCode = FillTemplate(patternEntity.Schema, patternEntity.DynamicsCode, replacements);
-            replacements = replacements.Where(r => r != null).ToArray();
-            string pattern = @"^(#I|#C|#AC|#CC)\d+#.*$";
-
-            List<string> fileNames = new();
-
-            // Iterate through inputs and check if each element matches the pattern
-            foreach (string input in replacements)
+            if (request.LanguageCode == "C#")
             {
-                if (Regex.IsMatch(input, pattern))
-                {
-                    string[] parts = input.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-                    if (parts.Length == 2)
-                        fileNames.Add(parts.ElementAt(1).Trim());
-                }
-            }
+                string filledCode = FillTemplate(patternEntity.Schema, patternEntity.DynamicsCode, replacements);
+                replacements = replacements.Where(r => r != null).ToArray();
+                string pattern = @"^(#I|#C|#AC|#CC)\d+#.*$";
 
-            string[] files = filledCode.Split(new string[] { "#splitfile#" }, StringSplitOptions.RemoveEmptyEntries);
+                List<string> fileNames = new();
 
-            // Prepare a memory stream to store files
-            using (MemoryStream ms = new())
-            {
-                using (ZipArchive archive = new(ms, ZipArchiveMode.Create, true))
+                // Iterate through inputs and check if each element matches the pattern
+                foreach (string input in replacements)
                 {
-                    int i = 0;
-                    for(; i < fileNames.Count; i++)
+                    if (Regex.IsMatch(input, pattern))
                     {
-                        ZipArchiveEntry entry = archive.CreateEntry(fileNames.ElementAt(i) + ".cs");
-                        using (StreamWriter writer = new(entry.Open()))
+                        string[] parts = input.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+                        if (parts.Length == 2)
+                            fileNames.Add(parts.ElementAt(1).Trim());
+                    }
+                }
+
+                string[] files = filledCode.Split(new string[] { "#splitfile#" }, StringSplitOptions.RemoveEmptyEntries);
+
+                // Prepare a memory stream to store files
+                using (MemoryStream ms = new())
+                {
+                    using (ZipArchive archive = new(ms, ZipArchiveMode.Create, true))
+                    {
+                        int i = 0;
+                        for (; i < fileNames.Count; i++)
+                        {
+                            ZipArchiveEntry entry = archive.CreateEntry(fileNames.ElementAt(i) + ".cs");
+                            using (StreamWriter writer = new(entry.Open()))
+                            {
+                                await writer.WriteAsync(files.ElementAt(i));
+                            }
+                        }
+                        ZipArchiveEntry entry2 = archive.CreateEntry("Program.cs");
+                        using (StreamWriter writer = new(entry2.Open()))
                         {
                             await writer.WriteAsync(files.ElementAt(i));
                         }
-                    }
-                    ZipArchiveEntry entry2 = archive.CreateEntry("Program.cs");
-                    using (StreamWriter writer = new(entry2.Open()))
-                    {
-                        await writer.WriteAsync(files.ElementAt(i));
+
                     }
 
+                    byte[] zipBytes = ms.ToArray();
+                    return zipBytes;
+                }
+            }
+            else
+            {
+                string filledCode = FillTemplate(patternEntity.SchemaJava, patternEntity.DynamicsCodeJava, replacements);
+                replacements = replacements.Where(r => r != null).ToArray();
+                string pattern = @"^(#I|#C|#AC|#CC)\d+#.*$";
+
+                List<string> fileNames = new();
+
+                // Iterate through inputs and check if each element matches the pattern
+                foreach (string input in replacements)
+                {
+                    if (Regex.IsMatch(input, pattern))
+                    {
+                        string[] parts = input.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+                        if (parts.Length == 2)
+                            fileNames.Add(parts.ElementAt(1).Trim());
+                    }
                 }
 
-                byte[] zipBytes = ms.ToArray();
-                return zipBytes;
+                string[] files = filledCode.Split(new string[] { "#splitfile#" }, StringSplitOptions.RemoveEmptyEntries);
+
+                // Prepare a memory stream to store files
+                using (MemoryStream ms = new())
+                {
+                    using (ZipArchive archive = new(ms, ZipArchiveMode.Create, true))
+                    {
+                        int i = 0;
+                        for (; i < fileNames.Count; i++)
+                        {
+                            ZipArchiveEntry entry = archive.CreateEntry(fileNames.ElementAt(i) + ".java");
+                            using (StreamWriter writer = new(entry.Open()))
+                            {
+                                await writer.WriteAsync(files.ElementAt(i));
+                            }
+                        }
+                        ZipArchiveEntry entry2 = archive.CreateEntry("Program.java");
+                        using (StreamWriter writer = new(entry2.Open()))
+                        {
+                            await writer.WriteAsync(files.ElementAt(i));
+                        }
+
+                    }
+
+                    byte[] zipBytes = ms.ToArray();
+                    return zipBytes;
+                }
             }
-        }
+        }     
     }
 }
