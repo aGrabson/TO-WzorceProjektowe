@@ -329,7 +329,7 @@ public class #C#
             this._builder.BuildPartB();
         }
     }",
-                ToInterpret = "#I1#Interfejs# #CC1#FajnaKlasa# #CC2#Produkt# #C1#KonkretnyBuilder#",
+                ToInterpret = "#I1#Interfejs# #CC1#FajnaKlasa# #CC2#Produkt# #C1#KonkretnyBuilder# ",
                 DynamicMethodI = "",
                 DynamicMethodC = "",
                 DynamicMethodAC = "",
@@ -468,7 +468,7 @@ class #C# : #I1#
         return _state;
     }
 }",
-                ToInterpret = "#I1#Interfejs# #CC1#Obserwator# #AC1#Abstrakcyjnaklasa# #CC2#ObserwatorImpl#",
+                ToInterpret = "#I1#Interfejs# #CC1#Obserwator# #AC1#Abstrakcyjnaklasa# #CC2#ObserwatorImpl# ",
                 DynamicMethodI = "",
                 DynamicMethodC = "",
                 DynamicMethodAC = "",
