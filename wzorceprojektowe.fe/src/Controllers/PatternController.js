@@ -44,3 +44,15 @@ export const GetPatternsByType = async (data) => {
       return null;
     }
   };
+  export const DownloadCode = async (data) => {
+    const response = await PatternService.DownloadCode(data);
+    if (response === undefined) {
+      return null;
+    }
+    if (response.status === 200) {
+      return response.data;
+    } else if (response.status === 400) {
+      alert("Error occured while downloading file.");
+      return null;
+    }
+  };

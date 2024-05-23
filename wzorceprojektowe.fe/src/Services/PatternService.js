@@ -52,4 +52,29 @@ export default class PatternService {
       return error.response;
     }
   }
+  static async DownloadCode(data) {
+    try {
+      const response = await axios.post(
+        backendHostname + "Pattern/DownloadCode",
+        {
+          patternName: data.selectedItem,
+          toInterpret: data.toInterpret,
+          languageCode: data.languageCode,
+        },
+        {
+          responseType: "blob",
+        }
+      );
+      const url = window.URL.createObjectURL(response.data);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", data.selectedItem + data.languageCode + ".zip");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      return response;
+    } catch (error) {
+      return error.response;
+    }
+  }
 }

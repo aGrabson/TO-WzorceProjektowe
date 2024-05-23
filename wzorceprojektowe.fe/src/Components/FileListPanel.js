@@ -73,6 +73,7 @@ export default function FileListPanel({ files, onFileSelect, toInterpret }) {
         variant="scrollable"
         scrollButtons
         onChange={handleTabChange}
+        
       >
         {files !== null
           ? files.map((file, index) => (

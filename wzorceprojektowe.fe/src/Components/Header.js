@@ -1,17 +1,36 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import "../Styles/Header.css";
 import { Dropdown } from "react-nested-dropdown";
 import "react-nested-dropdown/dist/styles.css";
+import { DownloadCode } from "../Controllers/PatternController";
 
-export default function Header({FetchCode}) {
-  const [selectedItem, setSelectedItem] = useState(null)
+export default function Header({ FetchCode, toInterpret }) {
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedLanguage, setSelectedLanguage] = useState(null);
 
   useEffect(() => {
-    if(selectedItem !== null)
-    {
+    if (selectedItem !== null) {
       FetchCode(selectedItem);
     }
   }, [selectedItem]);
+
+  const downloadFile = async () => {
+    if (!selectedItem) {
+      alert("Please select a pattern first.");
+      return;
+    }
+
+    if (!selectedLanguage) {
+      alert("Please select a language (Java or C#).");
+      return;
+    }
+
+    await DownloadCode({
+      selectedItem: selectedItem,
+      toInterpret: toInterpret,
+      languageCode: selectedLanguage,
+    });
+  };
 
   const items = [
     {
@@ -72,6 +91,51 @@ export default function Header({FetchCode}) {
         },
       ],
     },
+    {
+      label: "Behavioral Patterns",
+      items: [
+        {
+          label: "Chain of Responsibility",
+          onSelect: () => setSelectedItem("Chain of Responsibility"),
+        },
+        {
+          label: "Command",
+          onSelect: () => setSelectedItem("Command"),
+        },
+        {
+          label: "Iterator",
+          onSelect: () => setSelectedItem("Iterator"),
+        },
+        {
+          label: "Mediator",
+          onSelect: () => setSelectedItem("Mediator"),
+        },
+        {
+          label: "Memento",
+          onSelect: () => setSelectedItem("Memento"),
+        },
+        {
+          label: "Observer",
+          onSelect: () => setSelectedItem("Observer"),
+        },
+        {
+          label: "State",
+          onSelect: () => setSelectedItem("State"),
+        },
+        {
+          label: "Strategy",
+          onSelect: () => setSelectedItem("Strategy"),
+        },
+        {
+          label: "Template Method",
+          onSelect: () => setSelectedItem("Template Method"),
+        },
+        {
+          label: "Visitor",
+          onSelect: () => setSelectedItem("Visitor"),
+        },
+      ],
+    },
   ];
 
   return (
@@ -83,7 +147,39 @@ export default function Header({FetchCode}) {
           </button>
         )}
       </Dropdown>
-      <div className="PatternName">{selectedItem}</div>
+      {selectedItem ? (
+        <div
+          style={{
+            flexDirection: "row",
+            display: "flex",
+            alignItems: "center",
+            color: "white",
+          }}
+        >
+          <div>
+            <label>
+              <input
+                type="radio"
+                value="Java"
+                checked={selectedLanguage === "Java"}
+                onChange={() => setSelectedLanguage("Java")}
+              />
+              Java
+            </label>
+            <label>
+              <input
+                type="radio"
+                value="C#"
+                checked={selectedLanguage === "C#"}
+                onChange={() => setSelectedLanguage("C#")}
+              />
+              C#
+            </label>
+          </div>
+          <button onClick={downloadFile}>Download .zip</button>
+          <div className="PatternName">{selectedItem}</div>
+        </div>
+      ) : null}
     </header>
   );
 }

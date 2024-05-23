@@ -43,7 +43,7 @@ export default function Home() {
   return (
     <div className="App">
       <>
-        <Header FetchCode={FetchCode} />
+        <Header FetchCode={FetchCode} toInterpret={toInterpret}/>
         <div style={{ display: "flex", flexDirection: "row", flex: 1, paddingBottom:40 }}>
           {isLoading ? (
             <>

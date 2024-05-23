@@ -150,7 +150,7 @@ export default function PatternConfPanel({
           splittedHashName[1] +
           ";" +
           customValue +
-          ";#" +
+          ";" + splittedHashName[3] + "#" +
           name +
           "#";
         return updatedArray;
