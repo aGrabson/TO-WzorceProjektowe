@@ -150,7 +150,9 @@ export default function PatternConfPanel({
           splittedHashName[1] +
           ";" +
           customValue +
-          ";" + splittedHashName[3] + "#" +
+          ";" +
+          splittedHashName[3] +
+          "#" +
           name +
           "#";
         return updatedArray;
@@ -194,6 +196,37 @@ export default function PatternConfPanel({
     });
   };
 
+  function replaceNames(input) {
+    const interfacePattern = /^I(\d+)$/;
+    const coreClassPattern = /^CC(\d+)$/;
+    const abstractClassPattern = /^AC(\d+)$/;
+    const classPattern = /^C(\d+)$/;
+    const fieldPattern = /^F(\d+)$/;
+    const methodPattern = /^M(\d+)$/;
+
+    const parts = input.split(";").slice(0, 2);
+
+    return parts
+      .map((part) => {
+        if (fieldPattern.test(part)) {
+          return part.replace(fieldPattern, "Field$1");
+        } else if (methodPattern.test(part)) {
+          return part.replace(methodPattern, "Method$1");
+        } else if (interfacePattern.test(part)) {
+          return part.replace(interfacePattern, "Interface$1");
+        } else if (coreClassPattern.test(part)) {
+          return part.replace(coreClassPattern, "CoreClass$1");
+        } else if (abstractClassPattern.test(part)) {
+          return part.replace(abstractClassPattern, "AbstractClass$1");
+        } else if (classPattern.test(part)) {
+          return part.replace(classPattern, "Class$1");
+        } else {
+          return part;
+        }
+      })
+      .join(";");
+  }
+
   const HandleParameterChange = (value, index, hashName, methodIndex, name) => {
     const splittedHashName = hashName.split(";");
     const splittedParameters = splittedHashName[3].split(",").filter(Boolean);
@@ -227,7 +260,7 @@ export default function PatternConfPanel({
 
     splittedParameters.splice(index, 1);
     splittedHashName[3] = splittedParameters.join(",");
-    const splitter =  splittedParameters.length === 0 ? "#" : ",#"
+    const splitter = splittedParameters.length === 0 ? "#" : ",#";
 
     setSplittedInterpret((prev) => {
       const updatedArray = [...prev];
@@ -345,7 +378,7 @@ export default function PatternConfPanel({
                     <div className="form__group field" key={index}>
                       <input
                         type="input"
-                        value={hashSplitted[2]}
+                        value={replaceNames(hashSplitted[2])}
                         onChange={(e) =>
                           HandleChange(
                             e.target.value,
@@ -360,7 +393,7 @@ export default function PatternConfPanel({
                         required
                       />
                       <label htmlFor="add Interface" className="form__label">
-                        {hashSplitted[1]}
+                        {replaceNames(hashSplitted[1])}
                       </label>
                     </div>
                     <button
@@ -445,7 +478,7 @@ export default function PatternConfPanel({
                           >
                             <input
                               type="input"
-                              value={hashSplitted2[2]}
+                              value={replaceNames(hashSplitted2[2])}
                               onChange={(e) =>
                                 HandleChange(
                                   e.target.value,
@@ -463,7 +496,7 @@ export default function PatternConfPanel({
                               htmlFor="add Interface"
                               className="form__label"
                             >
-                              {hashSplitted2[1]}
+                              {replaceNames(hashSplitted2[1])}
                             </label>
                             <SelectFromList
                               handleCustomInputChange={handleCustomInputChange}
