@@ -109,7 +109,6 @@ public class Program
 }",
                 DynamicsCode = @"
 #splitfile#
-using System;
 public class #C# : #AC1#
 {
     #F;#C#
@@ -160,8 +159,8 @@ public class #C# : #AC1#
                 Name = "Flyweight",
                 Description = "The Flyweight pattern minimizes memory usage and improves performance by sharing as much as possible with similar objects.",
                 Type = "Structural",
-                Schema = "",
-                DynamicsCode = "",
+                Schema = @"",
+                DynamicsCode = @"",
                 ToInterpret = "",
                 DynamicMethodI = "",
                 DynamicMethodC = "",
@@ -212,9 +211,125 @@ public class #C# : #AC1#
                 Name = "Builder",
                 Description = "The Builder pattern separates the construction of a complex object from its representation, allowing the same construction process to create different representations.",
                 Type = "Creational",
-                Schema = "",
-                DynamicsCode = "",
-                ToInterpret = "",
+                Schema = @"#splitfile#public interface #I1#
+    {
+	#F;#I1#
+	#M;#I1#
+        void BuildPartA();
+        
+        void BuildPartB();
+    }
+#splitfile#	
+public class #CC1# : #I1#
+    {
+        private #CC2# _product = new #CC2#();
+		
+        #F;#CC1#
+		#M;#CC1#
+		
+        public #CC1#()
+        {
+            this.Reset();
+        }
+        
+        public void Reset()
+        {
+            this._product = new #CC2#();
+        }
+        
+        public void BuildPartA()
+        {
+            this._product.Add(""PartA1"");
+        }
+        
+        public void BuildPartB()
+        {
+            this._product.Add(""PartB1"");
+        }
+        
+        public #CC2# GetProduct()
+        {
+            #CC2# result = this._product;
+
+            this.Reset();
+
+            return result;
+        }
+    }
+#splitfile#
+public class #CC2#
+    {
+		#F;#CC2#
+		#M;#CC2#
+        private List<string> _parts = new List<string>();
+        
+        public void Add(string part)
+        {
+            this._parts.Add(part);
+        }
+        
+        public string ListParts()
+        {
+            string str = string.Empty;
+
+            for (int i = 0; i < this._parts.Count; i++)
+            {
+                str += this._parts[i] + "", "";
+            }
+
+            str = str.Remove(str.Length - 2);
+
+            return ""Product parts: "" + str + ""\n"";
+        }
+    }
+#DYNAMICS#
+#splitfile#
+class Program
+    {
+        static void Main(string[] args)
+        {
+            var director = new #C#();
+            var builder = new #CC1#();
+            director.Builder = builder;
+            
+            Console.WriteLine(""Standard basic product:"");
+            director.BuildMinimalViableProduct();
+            Console.WriteLine(builder.GetProduct().ListParts());
+
+            Console.WriteLine(""Standard full featured product:"");
+            director.BuildFullFeaturedProduct();
+            Console.WriteLine(builder.GetProduct().ListParts());
+
+            Console.WriteLine(""Custom product:"");
+            builder.BuildPartA();
+            Console.Write(builder.GetProduct().ListParts());
+        }
+    }",
+                DynamicsCode = @"#splitfile#
+public class #C#
+    {
+        private #I1# _builder;
+		
+        #F;#C#
+		#M;#C#
+		
+        public #I1# Builder
+        {
+            set { _builder = value; } 
+        }
+        
+        public void BuildMinimalViableProduct()
+        {
+            this._builder.BuildPartA();
+        }
+        
+        public void BuildFullFeaturedProduct()
+        {
+            this._builder.BuildPartA();
+            this._builder.BuildPartB();
+        }
+    }",
+                ToInterpret = "#I1#Interfejs# #CC1#FajnaKlasa# #CC2#Produkt# #C1#KonkretnyBuilder#",
                 DynamicMethodI = "",
                 DynamicMethodC = "",
                 DynamicMethodAC = "",
@@ -241,6 +356,119 @@ public class #C# : #AC1#
                 Schema = "",
                 DynamicsCode = "",
                 ToInterpret = "",
+                DynamicMethodI = "",
+                DynamicMethodC = "",
+                DynamicMethodAC = "",
+            },
+            new PatternEntity
+            {
+                Id = Guid.Parse("ffb8c2cb-3b24-4bbe-b4bd-34061073ee98"),
+                Name = "Observer",
+                Description = "Observer is a behavioral design pattern that lets you define a subscription mechanism to notify multiple objects about any events that happen to the object they’re observing.",
+                Type = "Behavioral",
+                Schema = @"#splitfile#
+public interface #I1#
+{
+	#F;#I1#
+	#M;#I1#
+    void Update();
+}
+#splitfile#
+public class #CC1# : #I1#
+{
+	#F;#CC1#
+	#M;#CC1#
+    private #CC2# _observable;
+    private int _state;
+
+    public #CC1#(#CC2# observable)
+    {
+        _observable = observable;
+    }
+
+    public void Update()
+    {
+        _state = _observable.GetState();
+        Console.WriteLine(""new state = "" + _state);
+    }
+}
+#splitfile#
+public abstract class #AC1#
+{
+	#F;#AC1#
+	#M;#AC1#
+    private List<#I1#> _observers = new List<#I1#>();
+
+    public void AddObserver(#I1# observer)
+    {
+        _observers.Add(observer);
+    }
+
+    public void RemoveObserver(#I1# observer)
+    {
+        _observers.Remove(observer);
+    }
+
+    public void NotifyObservers(object obj)
+    {
+        foreach (#I1# observer in _observers)
+        {
+            observer.Update();
+        }
+    }
+}
+#splitfile#
+public class #CC2# : #I1#
+{
+	#F;#CC2#
+	#M;#CC2#
+    private int _state;
+
+    public void UpdateState()
+    {
+        _state++;
+        NotifyObservers();
+    }
+
+    public int GetState()
+    {
+        return _state;
+    }
+}
+#DYNAMICS#
+#splitfile#
+public class Program
+{
+    static void Main(string[] args)
+    {
+        #CC2# observable = new #CC2#();
+        #I1# observer = new ObserverImpl(observable);
+        observable.AddObserver(observer);
+
+        // Symulacja aktualizacji stanu
+        observable.UpdateState();
+        observable.UpdateState();
+    }
+}",
+                DynamicsCode = @"#splitfile#
+class #C# : #I1#
+{
+	#F;#C#
+	#M;#C#
+    private int _state;
+
+    public void UpdateState()
+    {
+        _state++;
+        NotifyObservers();
+    }
+
+    public int GetState()
+    {
+        return _state;
+    }
+}",
+                ToInterpret = "#I1#Interfejs# #CC1#Obserwator# #AC1#Abstrakcyjnaklasa# #CC2#ObserwatorImpl#",
                 DynamicMethodI = "",
                 DynamicMethodC = "",
                 DynamicMethodAC = "",
