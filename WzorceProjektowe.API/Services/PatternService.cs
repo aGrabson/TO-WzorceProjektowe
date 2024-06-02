@@ -168,7 +168,6 @@ namespace WzorceProjektowe.API.Services
                         methodI = methodI.Replace("#NAME#", x.Name);
                         methodI = methodI.Replace("#PARAMS#", @param);
                         methodReplacement += methodI;
-                        //methodReplacement += $"{x.Type} {x.Name}({@param});\n    ";
                     }
                     else if (Regex.IsMatch(key, "AC.*"))
                     {
@@ -177,10 +176,6 @@ namespace WzorceProjektowe.API.Services
                         methodAC = methodAC.Replace("#PARAMS#", @param);
                         methodAC = methodAC.Replace("#NOTYPEPARAMS#", noTypeParam);
                         methodReplacement += methodAC;
-    //                    methodReplacement += @$"
-    //public virtual {x.Type} {x.Name}({@param}){{
-    //    component.{x.Name}({noTypeParam});
-    //}}";
                     }
                     else if (Regex.IsMatch(key, "C.*"))
                     {
@@ -189,12 +184,7 @@ namespace WzorceProjektowe.API.Services
                         methodC = methodC.Replace("#PARAMS#", @param);
                         methodC = methodC.Replace("#NOTYPEPARAMS#", noTypeParam);
                         methodReplacement += methodC;
-    //                    methodReplacement += @$"
-    //public {x.Type} {x.Name}({@param}){{
-    //    throw new NotImplementedException();
-    //}}";
                     }
-                    
                 }
                 template = template.Replace(separator + "M;" + separator + key + separator, methodReplacement);
             }
