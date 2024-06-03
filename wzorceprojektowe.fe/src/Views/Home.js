@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 import PatternConfPanel from "../Components/PatternConfPanel";
@@ -19,6 +19,9 @@ export default function Home() {
   const [files, setFiles] = useState(null);
   const [toInterpret, setToInterpret] = useState(null);
   const [dynamicClass, setDynamicClass] = useState(null);
+  const [dynamicMethodI, setDynamicMethodI] = useState(null);
+  const [dynamicMethodC, setDynamicMethodC] = useState(null);
+  const [dynamicMethodAC, setDynamicMethodAC] = useState(null);
 
   const FetchCode = async (selectedItem) => {
     setIsLoading(true);
@@ -29,7 +32,10 @@ export default function Home() {
       setFiles(data.listCodes);
       setFileSelected(data.listCodes[0]);
       setPatternData(data.listCodes[0].content);
-      setDynamicClass(data.dynamicClass)
+      setDynamicClass(data.dynamicClass);
+      setDynamicMethodI(data.dynamicMethodI);
+      setDynamicMethodC(data.dynamicMethodC);
+      setDynamicMethodAC(data.dynamicMethodAC);
     }
     setIsLoading(false);
   };
@@ -64,7 +70,7 @@ export default function Home() {
                 style={{ display: "flex", flexDirection: "column", flex: 1 }}
               >
                 <FileListPanel files={files} onFileSelect={handleFileSelect} toInterpret={toInterpret}/>
-                <PatternCodePanel patternData={patternData} toInterpret={toInterpret}/>
+                <PatternCodePanel patternData={patternData} toInterpret={toInterpret} dynamicMethodI={dynamicMethodI} dynamicMethodC={dynamicMethodC} dynamicMethodAC={dynamicMethodAC}/>
               </div>
             </>
           )}

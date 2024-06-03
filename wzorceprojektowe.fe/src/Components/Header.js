@@ -6,7 +6,7 @@ import { DownloadCode } from "../Controllers/PatternController";
 
 export default function Header({ FetchCode, toInterpret }) {
   const [selectedItem, setSelectedItem] = useState(null);
-  const [selectedLanguage, setSelectedLanguage] = useState(null);
+  const [selectedLanguage, setSelectedLanguage] = useState("C#");
 
   useEffect(() => {
     if (selectedItem !== null) {

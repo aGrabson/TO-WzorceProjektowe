@@ -53,7 +53,7 @@ namespace WzorceProjektowe.API.Services
 
             return result;
         }
-        static string FillTemplate(string template,string dynamicTemplate, string[] replacements)
+        static string FillTemplate(string template,string dynamicTemplate, string[] replacements, string dynamicMethodI, string dynamicMethodC, string dynamicMethodAC)
         {
             string[] tmpReplacements = replacements;
             List<Tuple<string,string>> dynamicClasses = new();
@@ -164,23 +164,27 @@ namespace WzorceProjektowe.API.Services
                     }
                     if (Regex.IsMatch(key, "I.*"))
                     {
-                        methodReplacement += $"{x.Type} {x.Name}({@param});\n    ";
+                        string methodI = dynamicMethodI.Replace("#TYPE#", x.Type);
+                        methodI = methodI.Replace("#NAME#", x.Name);
+                        methodI = methodI.Replace("#PARAMS#", @param);
+                        methodReplacement += methodI;
                     }
                     else if (Regex.IsMatch(key, "AC.*"))
                     {
-                        methodReplacement += @$"
-    public virtual {x.Type} {x.Name}({@param}){{
-        component.{x.Name}({noTypeParam});
-    }}";
+                        string methodAC = dynamicMethodAC.Replace("#TYPE#", x.Type);
+                        methodAC = methodAC.Replace("#NAME#", x.Name);
+                        methodAC = methodAC.Replace("#PARAMS#", @param);
+                        methodAC = methodAC.Replace("#NOTYPEPARAMS#", noTypeParam);
+                        methodReplacement += methodAC;
                     }
                     else if (Regex.IsMatch(key, "C.*"))
                     {
-                        methodReplacement += @$"
-    public {x.Type} {x.Name}({@param}){{
-        throw new NotImplementedException();
-    }}";
+                        string methodC = dynamicMethodAC.Replace("#TYPE#", x.Type);
+                        methodC = methodC.Replace("#NAME#", x.Name);
+                        methodC = methodC.Replace("#PARAMS#", @param);
+                        methodC = methodC.Replace("#NOTYPEPARAMS#", noTypeParam);
+                        methodReplacement += methodC;
                     }
-                    
                 }
                 template = template.Replace(separator + "M;" + separator + key + separator, methodReplacement);
             }
@@ -217,7 +221,7 @@ namespace WzorceProjektowe.API.Services
 
             string[] replacements = request.ToInterpret.Split(" ", StringSplitOptions.RemoveEmptyEntries);
             //string[] replacements = { "#I1#FajnyInterfejs#", "#C1#Klasa#", "#AC1#AbstrakcyjnaKlasa#", "#C2#KlasaDekoratora#", "#C#NowyDekorator1#", "#C#NowyDekorator2#" };
-            string filledCode = FillTemplate(patternEntity.Schema, patternEntity.DynamicsCode, replacements);
+            string filledCode = FillTemplate(patternEntity.Schema, patternEntity.DynamicsCode, replacements, patternEntity.DynamicMethodI, patternEntity.DynamicMethodC, patternEntity.DynamicMethodAC);
 
             filledCode = filledCode.Replace("#splitfile#", "");
             //Wywolanie w swagger
@@ -282,7 +286,7 @@ namespace WzorceProjektowe.API.Services
             string[] replacements = request.ToInterpret.Split(" ", StringSplitOptions.RemoveEmptyEntries);
             if (request.LanguageCode == "C#")
             {
-                string filledCode = FillTemplate(patternEntity.Schema, patternEntity.DynamicsCode, replacements);
+                string filledCode = FillTemplate(patternEntity.Schema, patternEntity.DynamicsCode, replacements, patternEntity.DynamicMethodI, patternEntity.DynamicMethodC, patternEntity.DynamicMethodAC);
                 replacements = replacements.Where(r => r != null).ToArray();
                 string pattern = @"^(#I|#C|#AC|#CC)\d+#.*$";
 
@@ -306,21 +310,17 @@ namespace WzorceProjektowe.API.Services
                 {
                     using (ZipArchive archive = new(ms, ZipArchiveMode.Create, true))
                     {
-                        int i = 0;
-                        for (; i < fileNames.Count; i++)
+                        for (int i = 0; i <= fileNames.Count; i++)
                         {
-                            ZipArchiveEntry entry = archive.CreateEntry(fileNames.ElementAt(i) + ".cs");
+                            ZipArchiveEntry entry = archive.CreateEntry(i == fileNames.Count ? "Program.cs" : fileNames.ElementAt(i) + ".cs");
                             using (StreamWriter writer = new(entry.Open()))
                             {
-                                await writer.WriteAsync(files.ElementAt(i));
+                                await writer.WriteLineAsync($"namespace {request.PatternName.ToLowerInvariant()}");
+                                await writer.WriteLineAsync("{");
+                                await writer.WriteAsync(IndentFileContent(files.ElementAt(i)));
+                                await writer.WriteLineAsync("\n}");
                             }
                         }
-                        ZipArchiveEntry entry2 = archive.CreateEntry("Program.cs");
-                        using (StreamWriter writer = new(entry2.Open()))
-                        {
-                            await writer.WriteAsync(files.ElementAt(i));
-                        }
-
                     }
 
                     byte[] zipBytes = ms.ToArray();
@@ -329,7 +329,7 @@ namespace WzorceProjektowe.API.Services
             }
             else
             {
-                string filledCode = FillTemplate(patternEntity.SchemaJava, patternEntity.DynamicsCodeJava, replacements);
+                string filledCode = FillTemplate(patternEntity.SchemaJava, patternEntity.DynamicsCodeJava, replacements, patternEntity.DynamicMethodIJava, patternEntity.DynamicMethodCJava, patternEntity.DynamicMethodACJava);
                 replacements = replacements.Where(r => r != null).ToArray();
                 string pattern = @"^(#I|#C|#AC|#CC)\d+#.*$";
 
@@ -353,27 +353,26 @@ namespace WzorceProjektowe.API.Services
                 {
                     using (ZipArchive archive = new(ms, ZipArchiveMode.Create, true))
                     {
-                        int i = 0;
-                        for (; i < fileNames.Count; i++)
+                        for (int i = 0; i <= fileNames.Count; i++)
                         {
-                            ZipArchiveEntry entry = archive.CreateEntry(fileNames.ElementAt(i) + ".java");
+                            ZipArchiveEntry entry = archive.CreateEntry(i == fileNames.Count ? "Program.java" : fileNames.ElementAt(i) + ".java");
                             using (StreamWriter writer = new(entry.Open()))
                             {
+                                await writer.WriteAsync($"package {request.PatternName.ToLowerInvariant()};\n");
                                 await writer.WriteAsync(files.ElementAt(i));
                             }
                         }
-                        ZipArchiveEntry entry2 = archive.CreateEntry("Program.java");
-                        using (StreamWriter writer = new(entry2.Open()))
-                        {
-                            await writer.WriteAsync(files.ElementAt(i));
-                        }
-
                     }
 
                     byte[] zipBytes = ms.ToArray();
                     return zipBytes;
                 }
             }
-        }     
+        }
+        private static string IndentFileContent(string content)
+        {
+            var lines = content.Split('\n');
+            return string.Join("\n", lines.Select(line => "    " + line));
+        }
     }
 }

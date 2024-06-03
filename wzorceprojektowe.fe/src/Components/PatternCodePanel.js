@@ -3,7 +3,7 @@ import "../Styles/PatternCodePanel.css";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { darcula } from "react-syntax-highlighter/dist/esm/styles/prism";
 
-export default function PatternCodePanel({ patternData, toInterpret }) {
+export default function PatternCodePanel({ patternData, toInterpret, dynamicMethodI, dynamicMethodC, dynamicMethodAC }) {
   const [code, setCode] = useState(null);
 
   useEffect(() => {
@@ -25,11 +25,34 @@ export default function PatternCodePanel({ patternData, toInterpret }) {
         const testMethod = splittedInterpret.filter((x) => regexMethod.test(x));
         let methodText = "";
         testMethod.forEach((methodItem) => {
-          const methodHashSplitted = methodItem.split("#");
-          const tmp = methodHashSplitted[1].split(";");
-          const parametersTmp = tmp[3].split(".").filter(Boolean);
+          const methodHashSplitted = methodItem.split("#").filter(Boolean);
+          const methodSemicolonSplitted = methodHashSplitted[0].split(";");
+          const methodParametersColonSplitted = methodSemicolonSplitted[3].split(",").filter(Boolean);
+          let parametersWithoutType = "";
+          methodParametersColonSplitted.forEach((parameterItem)=>{
+            const tmpParameter = parameterItem.split(".").filter(Boolean);
+            parametersWithoutType += tmpParameter[1] +",";
+          })
+          const parametersTmp = methodSemicolonSplitted[3].split(".").filter(Boolean);
           const parameters = parametersTmp.join(" ");
-          methodText += `public ${tmp[2]} ${methodHashSplitted[2]}(${parameters.slice(0, -1)}){}\n\t`;
+          if(/^I.*/.test(methodSemicolonSplitted[1])){
+            let methodI = dynamicMethodI.replaceAll("#TYPE#", methodSemicolonSplitted[2]);
+            methodI = methodI.replaceAll("#NAME#", methodHashSplitted[1]);
+            methodI = methodI.replaceAll("#PARAMS#", parameters.slice(0, -1));
+            methodText += methodI;
+          }else if(/^AC.*/.test(methodSemicolonSplitted[1])){
+            let methodAC = dynamicMethodAC.replaceAll("#TYPE#", methodSemicolonSplitted[2]);
+            methodAC = methodAC.replaceAll("#NAME#", methodHashSplitted[1]);
+            methodAC = methodAC.replaceAll("#PARAMS#", parameters.slice(0, -1));
+            methodAC = methodAC.replaceAll("#NOTYPEPARAMS#", parametersWithoutType.slice(0, -1));
+            methodText += methodAC;
+          }else if(/^C.*/.test(methodSemicolonSplitted[1])){
+            let methodC = dynamicMethodC.replaceAll("#TYPE#", methodSemicolonSplitted[2]);
+            methodC = methodC.replaceAll("#NAME#", methodHashSplitted[1]);
+            methodC = methodC.replaceAll("#PARAMS#", parameters.slice(0, -1));
+            methodC = methodC.replaceAll("#NOTYPEPARAMS#", parametersWithoutType.slice(0, -1));
+            methodText += methodC;
+          }
         });
 
         replacedStr = replacedStr.replaceAll(
