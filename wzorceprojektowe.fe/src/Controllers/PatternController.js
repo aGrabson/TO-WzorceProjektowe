@@ -40,7 +40,8 @@ export const GetPatternsByType = async (data) => {
     }
     if (response.status === 200) {
       return response.data;
-    } else if (response.status === 400) {
+    } else if (response.status === 400 || response.status === 404) {
+      alert("To be continued...")
       return null;
     }
   };

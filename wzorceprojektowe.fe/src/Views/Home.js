@@ -24,7 +24,7 @@ export default function Home() {
     setIsLoading(true);
     const data = await GetPatternCodeByName({ patternName: selectedItem });
     if (data !== null) {
-      console.log(data)
+      console.log(data);
       setToInterpret(data.toInterpret);
       setFiles(data.listCodes);
       setFileSelected(data.listCodes[0]);
