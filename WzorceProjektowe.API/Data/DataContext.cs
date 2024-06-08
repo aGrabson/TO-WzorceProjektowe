@@ -233,17 +233,177 @@ public class #C# extends #AC1# {
                 Name = "Facade",
                 Description = "The Facade pattern provides a unified interface to a set of interfaces in a subsystem.",
                 Type = "Structural",
-                Schema = "",
-                DynamicsCode = "",
-                SchemaJava = "",
-                DynamicsCodeJava = "",
-                ToInterpret = "",
-                DynamicMethodI = "",
-                DynamicMethodC = "",
-                DynamicMethodAC = "",
-                DynamicMethodIJava = "",
-                DynamicMethodCJava = "",
-                DynamicMethodACJava = "",
+                Schema = @"#splitfile#
+public class #CC1#
+{
+    private #CC2# flightBooking;
+    private #CC3# hotelBooking;
+    private #CC4# carRental;
+	#F;#CC1#
+
+	#M;#CC1#
+    public #CC1#()
+    {
+        flightBooking = new #CC2#();
+        hotelBooking = new #CC3#();
+        carRental = new #CC4#();
+    }
+
+    public void BookCompleteTrip(string departure, string destination, string hotelName, string carType)
+    {
+        Console.WriteLine(""Booking complete trip..."");
+        flightBooking.BookFlight(departure, destination);
+        hotelBooking.BookHotel(hotelName);
+        carRental.RentCar(carType);
+        Console.WriteLine(""Trip booking completed."");
+    }
+	
+	public void BookInCompleteTrip(string departure, string destination, string hotelName)
+    {
+        Console.WriteLine(""Booking complete trip..."");
+        flightBooking.BookFlight(departure, destination);
+        hotelBooking.BookHotel(hotelName);
+        Console.WriteLine(""Trip booking without car rental completed."");
+    }
+}
+#splitfile#
+public class #CC2#
+{
+	#F;#CC2#
+
+	#M;#CC2#
+    public void BookFlight(string departure, string destination)
+    {
+        Console.WriteLine($""Flight booked from {departure} to {destination}"");
+    }
+}
+#splitfile#
+public class #CC3#
+{
+	#F;#CC3#
+
+	#M;#CC3#
+    public void BookHotel(string hotelName)
+    {
+        Console.WriteLine($""Hotel booked: {hotelName}"");
+    }
+}
+#splitfile#
+public class #CC4#
+{
+	#F;#CC4#
+
+	#M;#CC4#
+    public void RentCar(string carType)
+    {
+        Console.WriteLine($""Car rented: {carType}"");
+    }
+}
+#DYNAMICS#
+#splitfile#
+class Program
+{
+    static void Main(string[] args)
+    {
+        #CC1# travelFacade = new #CC1#();
+        
+        travelFacade.BookCompleteTrip(""New York"", ""Los Angeles"", ""The Ritz-Carlton"", ""SUV"");
+        travelFacade.BookInCompleteTrip(""New York"", ""Los Angeles"", ""The Ritz-Carlton"");
+        
+    }
+}",
+                DynamicsCode = @"#splitfile#
+public class #C#
+{
+    #F;#C#
+
+	#M;#C#
+}",
+                SchemaJava = @"#splitfile#
+public class #CC1# {
+    private #CC2# flightBooking;
+    private #CC3# hotelBooking;
+    private #CC4# carRental;
+    #F;#CC1#
+
+    #M;#CC1#
+    public #CC1#() {
+        flightBooking = new #CC2#();
+        hotelBooking = new #CC3#();
+        carRental = new #CC4#();
+    }
+
+    public void BookCompleteTrip(String departure, String destination, String hotelName, String carType) {
+        System.out.println(""Booking complete trip..."");
+        flightBooking.BookFlight(departure, destination);
+        hotelBooking.BookHotel(hotelName);
+        carRental.RentCar(carType);
+        System.out.println(""Trip booking completed."");
+    }
+
+    public void BookInCompleteTrip(String departure, String destination, String hotelName) {
+        System.out.println(""Booking complete trip..."");
+        flightBooking.BookFlight(departure, destination);
+        hotelBooking.BookHotel(hotelName);
+        System.out.println(""Trip booking without car rental completed."");
+    }
+}
+#splitfile#
+public class #CC2# {
+    #F;#CC2#
+
+    #M;#CC2#
+    public void BookFlight(String departure, String destination) {
+        System.out.println(""Flight booked from "" + departure + "" to "" + destination);
+    }
+}
+#splitfile#
+public class #CC3# {
+    #F;#CC3#
+
+    #M;#CC3#
+    public void BookHotel(String hotelName) {
+        System.out.println(""Hotel booked: "" + hotelName);
+    }
+}
+#splitfile#
+public class #CC4# {
+    #F;#CC4#
+
+    #M;#CC4#
+    public void RentCar(String carType) {
+        System.out.println(""Car rented: "" + carType);
+    }
+}
+#DYNAMICS#
+#splitfile#
+public class Program {
+    public static void main(String[] args) {
+        #CC1# travelFacade = new #CC1#();
+        
+        travelFacade.BookCompleteTrip(""New York"", ""Los Angeles"", ""The Ritz-Carlton"", ""SUV"");
+        travelFacade.BookInCompleteTrip(""New York"", ""Los Angeles"", ""The Ritz-Carlton"");
+    }
+}",
+                DynamicsCodeJava = @"#splitfile#
+public class #C# {
+    #F;#C#
+
+    #M;#C#
+}",
+                ToInterpret = "#CC1#TravelFacade# #CC2#FlightBooking# #CC3#HotelBooking# #CC4#CarRental# ",
+                DynamicMethodI = @"",
+                DynamicMethodC = @$"
+    public #TYPE# #NAME#(#PARAMS#){{
+        throw new NotImplementedException();
+    }}",
+                DynamicMethodAC = @"",
+                DynamicMethodIJava = @"",
+                DynamicMethodCJava = @$"
+    public #TYPE# #NAME#(#PARAMS#){{
+        throw new UnsupportedOperationException(""Not implemented yet"");
+    }}",
+                DynamicMethodACJava = @"",
             },
             new PatternEntity
             {
@@ -589,16 +749,102 @@ public class #C# {
                 Name = "Singleton",
                 Description = "The Singleton pattern ensures that a class has only one instance and provides a global point of access to that instance.",
                 Type = "Creational",
-                Schema = "",
-                DynamicsCode = "",
-                SchemaJava = "",
-                DynamicsCodeJava = "",
-                ToInterpret = "",
+                Schema = @"#splitfile#
+public sealed class #CC1#
+{ 
+	private static #CC1# _instance;
+	#F;#CC1#
+
+	#M;#CC1#
+    private #CC1#() { }
+	
+    public static #CC1# GetInstance()
+    {
+        if (_instance == null)
+        {
+            _instance = new #CC1#();
+        }
+        return _instance;
+    }
+}
+#DYNAMICS#
+#splitfile#
+class Program
+{
+    static void Main(string[] args)
+    {
+        #CC1# s1 = #CC1#.GetInstance();
+        #CC1# s2 = #CC1#.GetInstance();
+    }
+}",
+                DynamicsCode = @"#splitfile#
+public sealed class #C#
+{ 
+	private static #C# _instance;
+	#F;#C#
+
+	#M;#C#
+    private #C#() { }
+	
+    public static #C# GetInstance()
+    {
+        if (_instance == null)
+        {
+            _instance = new #C#();
+        }
+        return _instance;
+    }
+}",
+                SchemaJava = @"#splitfile#
+public final class #CC1# {
+    private static #CC1# _instance;
+    #F;#CC1#
+
+    #M;#CC1#
+    private #CC1#() { }
+    
+    public static synchronized #CC1# GetInstance() {
+        if (_instance == null) {
+            _instance = new #CC1#();
+        }
+        return _instance;
+    }
+}
+#DYNAMICS#
+#splitfile#
+public class Program {
+    public static void main(String[] args) {
+        #CC1# s1 = #CC1#.GetInstance();
+        #CC1# s2 = #CC1#.GetInstance();
+    }
+}",
+                DynamicsCodeJava = @"#splitfile#
+public final class #C# {
+    private static #C# _instance;
+    #F;#C#
+
+    #M;#C#
+    private #C#() { }
+    
+    public static synchronized #C# GetInstance() {
+        if (_instance == null) {
+            _instance = new #C#();
+        }
+        return _instance;
+    }
+}",
+                ToInterpret = "#CC1#Singleton# ",
                 DynamicMethodI = "",
-                DynamicMethodC = "",
+                DynamicMethodC = @$"
+    public #TYPE# #NAME#(#PARAMS#){{
+        throw new NotImplementedException();
+    }}",
                 DynamicMethodAC = "",
                 DynamicMethodIJava = "",
-                DynamicMethodCJava = "",
+                DynamicMethodCJava = @$"
+    public #TYPE# #NAME#(#PARAMS#){{
+        throw new UnsupportedOperationException(""Not implemented yet"");
+    }}",
                 DynamicMethodACJava = "",
             },
             new PatternEntity
@@ -813,6 +1059,289 @@ public class #C# extends #AC1# {
     }}",
                 DynamicMethodCJava = @$"
     @Override
+    public #TYPE# #NAME#(#PARAMS#){{
+        throw new UnsupportedOperationException(""Not implemented yet"");
+    }}",
+            },
+            new PatternEntity
+            {
+                Id = Guid.Parse("ffb8c2cb-3b34-4bbe-b4bd-35061073ee98"),
+                Name = "Chain of Responsibility",
+                Description = "Chain of Responsibility is a behavioral design pattern that lets you pass requests along a chain of handlers. Upon receiving a request, each handler decides either to process the request or to pass it to the next handler in the chain.",
+                Type = "Behavioral",
+                Schema = @"#splitfile#
+public interface #I1#
+{
+	#F;#I1#
+
+	#M;#I1#
+    #I1# SetNext(#I1# handler);
+    
+    object Handle(object request);
+}
+#splitfile#
+abstract class #AC1# : #I1#
+{
+    private #I1# _nextHandler;
+	#F;#AC1#
+
+	#M;#AC1#
+    public #I1# SetNext(#I1# handler)
+    {
+        this._nextHandler = handler;
+        
+        return handler;
+    }
+    
+    public virtual object Handle(object request)
+    {
+        if (this._nextHandler != null)
+        {
+            return this._nextHandler.Handle(request);
+        }
+        else
+        {
+            return null;
+        }
+    }
+}
+#splitfile#
+class #CC1# : #AC1#
+{
+	#F;#CC1#
+
+	#M;#CC1#
+    public override object Handle(object request)
+    {
+        if ((request as string) == ""Pizza"")
+        {
+			Console.Write($""Johny: I'll eat the {request.ToString()}.\n"");
+            return """";
+        }
+        else
+        {
+			Console.Write($""Johny: I'm hungry!\n"");
+            return base.Handle(request);
+        }
+    }
+}
+#splitfile#
+class #CC2# : #AC1#
+{
+	#F;#CC2#
+
+	#M;#CC2#
+    public override object Handle(object request)
+    {
+        if (request.ToString() == ""Donut"")
+        {
+			Console.Write($""Arthur: I'll eat the {request.ToString()}.\n"");
+            return """";
+        }
+        else
+        {
+			Console.Write($""Arthur: I'm hungry!\n"");
+            return base.Handle(request);
+        }
+    }
+}
+#splitfile#
+class #CC3# : #AC1#
+{
+	#F;#CC3#
+
+	#M;#CC3#
+    public override object Handle(object request)
+    {
+        if (request.ToString() == ""Kebab"")
+        {
+			Console.Write($""Tadeusz: I'll eat the {request.ToString()}.\n"");
+            return """";
+        }
+        else
+        {
+			Console.Write($""Tadeusz: I'm hungry!\n"");
+            return base.Handle(request);
+        }
+    }
+}
+#DYNAMICS#
+#splitfile#
+class Program
+{
+    static void Main(string[] args)
+    {
+        var handler1 = new #CC1#();
+        var handler2 = new #CC2#();
+        var handler3 = new #CC3#();
+
+        handler1.SetNext(handler2).SetNext(handler3);
+
+        foreach (var food in new List<string> { ""Pizza"", ""Kebab"", ""Cup of coffee"", ""Donut"" })
+        {
+            Console.WriteLine($""Chef: Who wants a {food}?"");
+
+            var result = handler1.Handle(food);
+
+            if (result == null)
+            {
+                Console.WriteLine($""   {food} was left untouched."");
+            }
+        }
+    }
+}",
+                DynamicsCode = @"#splitfile#
+class #C# : #AC1#
+{
+	#F;#C#
+
+	#M;#C#
+    public override object Handle(object request)
+    {
+        if (request.ToString() == ""Cup of coffee"") //change in your code
+        {
+			Console.Write($""NewHandler: I'll eat the {request.ToString()}.\n"");
+            return """";
+        }
+        else
+        {
+			Console.Write($""NewHandler: I'm hungry!\n"");
+            return base.Handle(request);
+        }
+    }
+}",
+                SchemaJava = @"#splitfile#
+public interface #I1# {
+    #F;#I1#
+
+    #M;#I1#
+    #I1# SetNext(#I1# handler);
+    
+    Object Handle(Object request);
+}
+#splitfile#
+abstract class #AC1# implements #I1# {
+    private #I1# _nextHandler;
+    #F;#AC1#
+
+    #M;#AC1#
+    public #I1# SetNext(#I1# handler) {
+        this._nextHandler = handler;
+        
+        return handler;
+    }
+    
+    public Object Handle(Object request) {
+        if (this._nextHandler != null) {
+            return this._nextHandler.Handle(request);
+        } else {
+            return null;
+        }
+    }
+}
+#splitfile#
+class #CC1# extends #AC1# {
+    #F;#CC1#
+
+    #M;#CC1#
+    @Override
+    public Object Handle(Object request) {
+        if (request.toString().equals(""Pizza"")) {
+            System.out.print(""Johny: I'll eat the "" + request.toString() + "".\n"");
+            return """";
+        } else {
+            System.out.print(""Johny: I'm hungry!\n"");
+            return super.Handle(request);
+        }
+    }
+}
+#splitfile#
+class #CC2# extends #AC1# {
+    #F;#CC2#
+
+    #M;#CC2#
+    @Override
+    public Object Handle(Object request) {
+        if (request.toString().equals(""Donut"")) {
+            System.out.print(""Arthur: I'll eat the "" + request.toString() + "".\n"");
+            return """";
+        } else {
+            System.out.print(""Arthur: I'm hungry!\n"");
+            return super.Handle(request);
+        }
+    }
+}
+#splitfile#
+class #CC3# extends #AC1# {
+    #F;#CC3#
+
+    #M;#CC3#
+    @Override
+    public Object Handle(Object request) {
+        if (request.toString().equals(""Kebab"")) {
+            System.out.print(""Tadeusz: I'll eat the "" + request.toString() + "".\n"");
+            return """";
+        } else {
+            System.out.print(""Tadeusz: I'm hungry!\n"");
+            return super.Handle(request);
+        }
+    }
+}
+#DYNAMICS#
+#splitfile#
+public class Program {
+    public static void main(String[] args) {
+        #CC1# handler1 = new #CC1#();
+        #CC2# handler2 = new #CC2#();
+        #CC3# handler3 = new #CC3#();
+
+        handler1.SetNext(handler2).SetNext(handler3);
+
+        List<String> foods = Arrays.asList(""Pizza"", ""Kebab"", ""Cup of coffee"", ""Donut"");
+        for (String food : foods) {
+            System.out.println(""Chef: Who wants a "" + food + ""?"");
+
+            Object result = handler1.Handle(food);
+
+            if (result == null) {
+                System.out.println(""   "" + food + "" was left untouched."");
+            }
+        }
+    }
+}",
+                DynamicsCodeJava = @"#splitfile#
+class #C# extends #AC1# {
+    #F;#C#
+
+    #M;#C#
+    @Override
+    public Object Handle(Object request) {
+        if (request.toString().equals(""Cup of coffee"")) {
+            System.out.print(""NewHandler: I'll drink the "" + request.toString() + "".\n"");
+            return """";
+        } else {
+            System.out.print(""NewHandler: I'm thirsty!\n"");
+            return super.Handle(request);
+        }
+    }
+}",
+                ToInterpret = "#I1#IHandler# #AC1#AbstractHandler# #CC1#JohnyHandler# #CC2#ArthurHandler# #CC3#TadeuszHandler# ",
+                DynamicMethodI = $"#TYPE# #NAME# (#PARAMS#);\n    ",
+                DynamicMethodC = @$"
+    public #TYPE# #NAME#(#PARAMS#){{
+        throw new NotImplementedException();
+    }}",
+                DynamicMethodAC = @$"
+    public #TYPE# #NAME#(#PARAMS#){{
+        throw new NotImplementedException();
+    }}",
+                DynamicMethodIJava = $"#TYPE# #NAME# (#PARAMS#);\n    ",
+                DynamicMethodCJava = @$"
+    @Override
+    public #TYPE# #NAME#(#PARAMS#){{
+        throw new UnsupportedOperationException(""Not implemented yet"");
+    }}",
+                DynamicMethodACJava = @$"
     public #TYPE# #NAME#(#PARAMS#){{
         throw new UnsupportedOperationException(""Not implemented yet"");
     }}",

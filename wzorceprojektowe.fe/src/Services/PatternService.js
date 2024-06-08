@@ -68,7 +68,8 @@ export default class PatternService {
       const url = window.URL.createObjectURL(response.data);
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", data.selectedItem + data.languageCode + ".zip");
+      const name = data.selectedItem.replaceAll(' ', '_');
+      link.setAttribute("download", name + data.languageCode + ".zip");
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
